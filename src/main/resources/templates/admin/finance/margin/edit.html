@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.margin.margin}">Margin: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{margin}"
+                                       th:placeholder="#{admin.form.margin.margin}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.location}">Location: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{location}">
+                                    <option th:text="#{admin.form.option.all}" value="">All</option>
+                                    <option th:each="location: ${locations}"
+                                            th:text="${location}"
+                                            th:value="${location.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.margin.commodity}">Commodity: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{commodity}">
+                                    <option th:each="commodity: ${commodities}"
+                                            th:text="${commodity.name}"
+                                            th:value="${commodity.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.margin.finacneentity}">Finance Entity: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{financeEntity}">
+                                    <option th:each="financeEntity: ${financeEntities}"
+                                            th:text="${financeEntity.name}"
+                                            th:value="${financeEntity.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

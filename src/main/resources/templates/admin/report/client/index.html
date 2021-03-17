@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/reportbreadcrumbs::reportbreadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/client-data'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.report.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{status}">
+                                    <option th:each="status: ${statuses}" th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="section-wrapper mg-t-25" th:if="${!models.isEmpty()}">
+            <label class="section-title" th:text="#{admin.helper.reportsdata}">Reports Data</label>
+            <div class="table-wrapper">
+                <table class="table table-bordered display responsive wrap" id="datatable1">
+                    <thead class="thead-colored bg-info">
+                    <tr>
+                        <th class="wd-5p" th:text="#{admin.grid.id}">Id</th>
+                        <th class="wd-15p" th:text="#{admin.grid.code}">Code</th>
+                        <th class="wd-15p" th:text="#{admin.grid.name}">Name</th>
+                        <th class="wd-15p" th:text="#{admin.grid.businesstype}">Business Type</th>
+                        <th class="wd-15p" th:text="#{admin.grid.status}">Status</th>
+                        <th th:text="#{admin.grid.actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="model :${models}">
+                        <td th:text="${model.id}"></td>
+                        <td th:text="${model.code}"></td>
+                        <td th:text="${model.name}"></td>
+                        <td th:text="${model.businessType.name}"></td>
+                        <td th:text="${model.status}"></td>
+                        <td>
+                            <a class="btn btn-success btn-icon"
+                               th:href="@{'/admin/'+${controller}+'/client-view/'+${model.id}}"
+                               th:title="#{admin.grid.view}">
+                                <div><i class="icon ion-search"></i></div>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

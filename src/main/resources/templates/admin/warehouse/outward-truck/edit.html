@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/outward/edit/'+${model.outwardTruck.outward.getId()}}"
+                                            th:text="#{admin.menu.outward.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.outward.trucks}">
+                        Trucks</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <div class="pd-10 mt-2 bd-y bd-warning">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.trucks}">Trucks</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.bags}">Bags</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.qc}">QC</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.outwardTruck.outward.friendlyName}">Outward Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outwardtruck.weighbridge}">Weighbridge: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{outwardTruck.weighbridge}">
+                                    <option th:text="#{admin.form.option.none}" value="">None</option>
+                                    <option th:each="weighbridge: ${weighbridges}"
+                                            th:text="${weighbridge.name}"
+                                            th:value="${weighbridge.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outwardtruck.vehiclenumber}">Vehicle Number: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{outwardTruck.vehicleNumber}"
+                                       th:placeholder="#{admin.form.outwardtruck.vehiclenumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.outwardtruck.loadingdate}">Loading
+                                    Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change"
+                                           required=""
+                                           th:field="*{outwardTruck.loadingDate}"
+                                           th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.outwardtruck.loadingdate}"
+                                           type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outwardtruck.totalbagsbalesdrums}">Total: </label>
+                                <label class="form-control-label"
+                                       th:text="${unitType}">Bags/Bales/Drums: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="digits"
+                                       required=""
+                                       th:field="*{outwardTruck.totalBagsBalesDrums}"
+                                       th:placeholder="#{admin.form.outwardtruck.totalbagsbalesdrums}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 weighmentfields">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.outwardtruck.totalgrossweight}">Total
+                                    Gross Weight: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-gt="#outwardTruck.tareWeight"
+                                       data-parsley-pattern="^((\d+)((\.\d{1,3})?))$" data-parsley-trigger="change"
+                                       data-parsley-type="number"
+                                       th:field="*{outwardTruck.grossWeight}"
+                                       th:placeholder="#{admin.form.outwardtruck.totalgrossweight}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 weighmentfields">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.outwardtruck.totaltareweight}">Total
+                                    Tare Weight: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       th:field="*{outwardTruck.tareWeight}"
+                                       th:placeholder="#{admin.form.outwardtruck.totaltareweight}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 weighmentfields">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.outwardtruck.totalnetweight}">Total
+                                    Net Weight: </label>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change" id="netweight"
+                                       readonly th:placeholder="#{admin.form.outwardtruck.totalnetweight}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.outwardtruck.gatepassdocument}">Gate Pass Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.outwardTruck.getGatePassDocument() == null}">&nbsp;*</span>
+                            <small th:if="${model.outwardTruck.getGatePassDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.outwardTruck.getGatePassDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.outwardTruck.getGatePassDocument() == null} ? 'required'"
+                                       th:field="*{gatePassDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.outwardtruck.gatepassdocument}">Gate Pass Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outwardtruck.assayer}">Assayer: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{outwardTruck.employee}">
+                                    <option th:text="#{admin.form.option.none}" value="">None</option>
+                                    <option th:each="employee: ${employees}"
+                                            th:text="${employee.nameAndCode}"
+                                            th:value="${employee.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outwardtruck.qualitylab}">Quality Lab: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{outwardTruck.qualityLab}">
+                                    <option th:text="#{admin.form.option.none}" value="">None</option>
+                                    <option th:each="qualityLab: ${qualityLabs}"
+                                            th:text="${qualityLab.fullAddress}"
+                                            th:value="${qualityLab.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0 weighmentfields">
+                            <span th:text="#{admin.form.outwardtruck.weighmentdocument}">Weighment Document: </span>
+                            <span class="tx-danger weighmentmandatorylabel"
+                                  th:if="${model.outwardTruck.getWeighmentDocument() == null}">&nbsp;*</span>
+                            <small id="existingweighmentdocument"
+                                   th:if="${model.outwardTruck.getWeighmentDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.outwardTruck.getWeighmentDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:field="*{weighmentDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.outwardtruck.weighmentdocument}">Weighment
+                                    Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0 hide">
+                            <span th:text="#{admin.form.outwardtruck.qualitycheckdocument}">Quality Check Document: </span>
+                            <small th:if="${model.outwardTruck.getQualityCheckDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.outwardTruck.getQualityCheckDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       readonly th:field="*{qualityCheckDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.outwardtruck.qualitycheckdocument}">Quality Check
+                                    Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{outwardTruck.id}" th:value="*{outwardTruck.id}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{outwardTruck.outward}" th:value="*{outwardTruck.outward}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('#outwardTruck\\.totalBagsBalesDrums, #outwardTruck\\.grossWeight, #outwardTruck\\.tareWeight').on('blur', function () {
+                    var grossWeight = parseFloat($("#outwardTruck\\.grossWeight").val());
+                    var tareWeight = parseFloat($("#outwardTruck\\.tareWeight").val());
+                    if (grossWeight > 0 && tareWeight > 0) {
+                        if (tareWeight < grossWeight) {
+                            var netweight = grossWeight - tareWeight
+                            $("#netweight").val(netweight.toFixed(3));
+                            $('#netweight').parsley().removeError('invalid_net_weight');
+                        } else {
+                            $('#netweight').parsley().addError('invalid_net_weight', {message: "Tare weight should be less than gross weight"});
+                        }
+                    }
+                }).blur();
+                $('#outwardTruck\\.weighbridge').on('change', function () {
+                    $('#modelForm').parsley().destroy();
+                    var weighbridge = $(this).val();
+                    if (!weighbridge) {
+                        $(".weighmentfields").hide();
+                        $("#outwardTruck\\.grossWeight").val(0);
+                        $("#outwardTruck\\.tareWeight").val(0);
+                        $("#netweight").val(0);
+                        $("#outwardTruck\\.grossWeight").attr('data-parsley-required', 'false');
+                        $("#outwardTruck\\.tareWeight").attr('data-parsley-required', 'false');
+                        $("#netweight").attr('data-parsley-required', 'false');
+                        $("#weighmentDocument").attr('data-parsley-required', 'false');
+                    } else {
+                        var grossWeight = parseFloat($("#outwardTruck\\.grossWeight").val());
+                        var tareWeight = parseFloat($("#outwardTruck\\.tareWeight").val());
+                        var netWeight = parseFloat($("#netweight").val());
+                        if (!grossWeight > 0 && !tareWeight > 0 && !netWeight > 0) {
+                            $("#outwardTruck\\.grossWeight").val('');
+                            $("#outwardTruck\\.tareWeight").val('');
+                            $("#netweight").val('');
+                        }
+                        $(".weighmentfields").show();
+                        $("#outwardTruck\\.grossWeight").attr('data-parsley-required', 'true');
+                        $("#outwardTruck\\.tareWeight").attr('data-parsley-required', 'true');
+                        $("#netweight").attr('data-parsley-required', 'true');
+                        if (!$("#existingweighmentdocument").length) {
+                            $("#weighmentDocument").attr('data-parsley-required', 'true');
+                            $(".weighmentmandatorylabel").show();
+                        } else {
+                            $("#weighmentDocument").attr('data-parsley-required', 'false');
+                            $(".weighmentmandatorylabel").hide();
+                        }
+                    }
+                    $('#modelForm').parsley();
+                }).change();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

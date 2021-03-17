@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="row mg-b-10">
+                <div class="col-lg-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mg-b-0">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.table.property}">Property</th>
+                                <th th:text="#{admin.table.value}">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="#{admin.table.contract.applicationnumber}">Application Number</td>
+                                <td th:text="${model.contract.id}">Id</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.name}">Name</td>
+                                <td th:text="${model.contract.name}">Name</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.client}">Client</td>
+                                <td th:text="${model.contract.client.friendlyName}">Name</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.warehouse}">Warehouse</td>
+                                <td th:text="${model.contract.warehouse.friendlyName}">Name</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.date}">Contract Date</td>
+                                <td th:text="${#dates.format(model.contract.contractDate, 'dd-MMM-yyyy')}">Contract Date
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.effectivefrom}">Effective From</td>
+                                <td th:text="${#dates.format(model.contract.effectiveFrom, 'dd-MMM-yyyy')}">Effective
+                                    From
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.effectiveto}">Effective To</td>
+                                <td th:text="${#dates.format(model.contract.effectiveTo, 'dd-MMM-yyyy')}">Effective To
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.storagecharge}">Storage Charge</td>
+                                <td th:text="${model.contract.storageCharge}">Storage Charge</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.storagechargebasis}">Storage Charge Basis</td>
+                                <td th:text="${model.contract.storageChargeBasis}">Storage Charge Basis</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.lockin}">Lock In</td>
+                                <td th:text="${model.contract.lockIn}">Lock In</td>
+                            </tr>
+                            <tr th:if="${model.contract.lockInEndDate != null}">
+                                <td th:text="#{admin.table.contract.lockinenddate}">Lock In End Date</td>
+                                <td th:text="${model.contract.lockInEndDate}">Lock In End Date</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.billingtype}">Billing Type</td>
+                                <td th:text="${model.contract.billingType}">Billing Type</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.postlockinbillingcharge}">Post Lock In Billing
+                                    Charge
+                                </td>
+                                <td th:text="${model.contract.postLockInBillingCharge}">Post Lock In Billing Charge</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.billingpeakstock}">Billing Peak Stock</td>
+                                <td th:text="${model.contract.billingPeakStock}">Billing Peak Stock</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.basisoftakeover}">Basis Of Takeover</td>
+                                <td th:text="${model.contract.basisOfTakeover.name}">Basis Of Takeover
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.commodities}">Commodities</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="contractCommodity: ${model.contractCommodity}">
+                                            <p class="mg-b-0">
+                                                <span th:text="${contractCommodity.commodity.name}">Commodity</span>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.addonservice}">Add On Service</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="contractAddOnService: ${model.contractAddOnService}">
+                                            <p class="mg-b-0">
+                                                <span th:text="${contractAddOnService.addOnService.name}">Add On Service</span>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.contract.documents}">Documents</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="contractDocument: ${model.contractDocument}">
+                                            <p class="mg-b-0">
+                                                <span class="text-muted"
+                                                      th:text="${contractDocument.documentType.name}">Document Type</span>
+                                                <a target="_blank"
+                                                   th:href="@{'/admin/document/download/'+${contractDocument.document.id}}"><i
+                                                        class="icon ion-folder"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-layout">
+                        <form data-parsley-validate="" enctype="multipart/form-data"
+                              id="modelForm" method="post"
+                              th:action="@{'/admin/'+${controller}+'/business-approval-save'}"
+                              th:object="${contractRemarkForm}">
+                            <div th:replace="fragments/alerts::alerts"></div>
+                            <div th:replace="fragments/messages::messages"></div>
+                            <div class="row mg-b-10">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               th:text="#{admin.form.contract.remarks}">Remarks: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <small>
+                                            <a class="tx-indigo viewremarks"
+                                               href="javascript:void(0);" th:data-contract="${model.contract.id}"
+                                               th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                            </a>
+                                        </small>
+                                        <textarea class="form-control" data-parsley-minlength="2"
+                                                  data-parsley-trigger="change"
+                                                  required="" th:field="*{remark}"
+                                                  th:placeholder="#{admin.form.contract.remarks}"></textarea>
+                                    </div>
+                                </div><!-- col-12 -->
+                            </div><!-- row -->
+                            <div class="row mg-b-10">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label tx-success tx-bold"
+                                               th:text="#{admin.form.client.status}">Status: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <select class="form-control select2-show-search"
+                                                th:field="*{status}">
+                                            <option th:each="status: ${statuses}"
+                                                    th:text="${status}"
+                                                    th:value="${status}"></option>
+                                        </select>
+                                    </div>
+                                </div><!-- col-12 -->
+                            </div><!-- row -->
+
+                            <div class="form-layout-footer">
+                                <input class="form-control" th:field="*{contract}" th:value="*{contract}"
+                                       type="hidden"/>
+                                <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                        type="submit">
+                                    Submit
+                                </button>
+                                <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                        type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- form-layout -->
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var contract = $(this).data("contract");
+                    if (contract) {
+                        $.ajax({
+                            url: baseUrl + '/contract-remark/getByContract/' + contract,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

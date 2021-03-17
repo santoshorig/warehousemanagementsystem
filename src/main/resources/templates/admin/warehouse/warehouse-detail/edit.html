@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse/edit/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.registration}">
+                        Registration</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-commodity/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.commodity}">Commodity</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-owner/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.owner}">
+                        Owner</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.basic}">Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.weighbridge}">Weighbridge</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.manpower}">
+                        Manpower</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.asset}">
+                        Asset</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.consumable}">
+                        Consumable</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.stack}">
+                        Stack</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.cad}">
+                        CAD</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.documents}">
+                        Documents</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.inspection}">
+                        Inspection</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.warehouse.friendlyName}">Warehouse Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.constructionyear}">Construction
+                                    Year: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change" required=""
+                                       th:field="*{constructionYear}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.warehousedetail.constructionyear}" type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.license}">License: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{license}">
+                                    <option th:each="license: ${licenses}"
+                                            th:text="${license.value}"
+                                            th:value="${license.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 haslicense" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.licensenumber}">License Number: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{licenseNumber}"
+                                       th:placeholder="#{admin.form.warehousedetail.licensenumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 haslicense" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.validitytill}">Validity Till: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       th:field="*{validityTill}"
+                                       th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.warehousedetail.validitytill}" type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 haslicense" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.issuingauthority}">Issuing
+                                    Authority: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{issuingAuthority}"
+                                       th:placeholder="#{admin.form.warehousedetail.issuingauthority}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 haslicense" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.accreditation}">Accreditation: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{accreditation}"
+                                       th:placeholder="#{admin.form.warehousedetail.accreditation}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.agreementtype}">Agreement
+                                    Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{agreementType}">
+                                    <option th:each="agreementType: ${agreementTypes}"
+                                            th:text="${agreementType.value}"
+                                            th:value="${agreementType.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.length}">Length: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{length}"
+                                       th:placeholder="#{admin.form.warehousedetail.length}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.breadth}">Breadth: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{breadth}"
+                                       th:placeholder="#{admin.form.warehousedetail.breadth}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.height}">Height: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{height}"
+                                       th:placeholder="#{admin.form.warehousedetail.height}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.shape}">Shape: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{shape}">
+                                    <option th:each="shape: ${shapes}"
+                                            th:text="${shape.value}"
+                                            th:value="${shape.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.fssailicensenumber}">FSSAI License
+                                    Number: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{fssaiLicenseNumber}"
+                                       th:placeholder="#{admin.form.warehousedetail.fssailicensenumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.locationtype}">Location Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{locationType}">
+                                    <option th:each="locationType: ${locationTypes}"
+                                            th:text="${locationType.value}"
+                                            th:value="${locationType.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 factory" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.functionalfactory}">Functional
+                                    Factory: </label>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{functionalFactory}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 factory" style="display: none">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.entrysameasfactory}">Entry same as
+                                    Factory: </label>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{sameEntryFactory}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 factory" style="display:none;">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehousedetail.closedmonths}">Closed
+                                    (Months): </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="digits"
+                                       th:field="*{closedMonths}"
+                                       th:placeholder="#{admin.form.warehousedetail.closedmonths}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 factory" style="display:none;">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehousedetail.competition}">Any
+                                    Competition: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{competition}"
+                                       th:placeholder="#{admin.form.warehousedetail.competition}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.structureinsurance}">Structure
+                                    Insurance: </label>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{structureInsurance}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 structureinsurance" style="display: none">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.structureinsuranceexpiry}">Structure
+                                    Insurance Expiry: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       th:field="*{structureInsuranceExpiry}"
+                                       th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.warehousedetail.structureinsuranceexpiry}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.agreementstart}">Agreement Start: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       th:field="*{agreementStart}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.warehousedetail.agreementstart}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.agreeementend}">Agreement End: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       th:field="*{agreementEnd}"
+                                       th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.warehousedetail.agreeementend}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.rent}">Rent Per Month: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{rent}"
+                                       th:placeholder="#{admin.form.warehousedetail.rent}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.gst}">GST Applicable: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{gstApplicable}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 actualtype">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.rentpermt}">Rent Per Mt: </label>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0"
+                                       th:field="*{rentPerMt}"
+                                       th:placeholder="#{admin.form.warehousedetail.rentpermt}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 franchisetype">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehousedetail.rentownerpercentage}">Rent Owner
+                                    Percentage: </label>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       max="100" min="0"
+                                       th:field="*{rentOwnerPercentage}"
+                                       th:placeholder="#{admin.form.warehousedetail.rentownerpercentage}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                    </div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="card card-sales">
+                                <h6 class="slim-card-title tx-primary"
+                                    th:text="#{admin.form.warehousedetail.rentdetails}">Rent Details Per Month</h6>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="tx-12" th:text="#{admin.form.warehousedetail.effectiverent}">Effective
+                                            Rent</label>
+                                        <p id="effectiverent">0</p>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <label class="tx-12"
+                                               th:text="#{admin.form.warehousedetail.effectiverentwithgst}">Effective
+                                            Rent GST</label>
+                                        <p id="effectiverentgst">0</p>
+                                    </div><!-- col -->
+                                </div><!-- row -->
+                            </div><!-- card -->
+                        </div><!-- col-6 -->
+                        <div class="col-lg-8">
+                            <div class="card card-sales">
+                                <h6 class="slim-card-title tx-success"
+                                    th:text="#{admin.form.warehousedetail.warehousedetails}">Warehouse Details</h6>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="tx-12"
+                                               th:text="#{admin.form.warehousedetail.commodity}">Commodity</label>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <label class="tx-12"
+                                               th:text="#{admin.form.warehousedetail.capacityutilization}">Capacity
+                                            Utilization</label>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <label class="tx-12" th:text="#{admin.form.warehousedetail.expectedaum}">Expected
+                                            AUM</label>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <label class="tx-12" th:text="#{admin.form.warehousedetail.fundingvalue}">Funding
+                                            Value</label>
+                                    </div><!-- col -->
+                                </div><!-- row -->
+                                <div class="row" th:each="commodity :${commodities}">
+                                    <div class="col">
+                                        <p th:text="${commodity.commodity.name}">Commodity</p>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <p th:text="${#numbers.formatDecimal(commodity.getCapacityUtilization(), 1, 'DEFAULT', 2, 'DEFAULT')}">
+                                            Capacity Utilization</p>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <p th:text="${#numbers.formatDecimal(commodity.getExpectedAUM(), 1, 'DEFAULT', 2, 'DEFAULT')}">
+                                            Expected AUM</p>
+                                    </div><!-- col -->
+                                    <div class="col">
+                                        <p th:text="${#numbers.formatDecimal(commodity.getFundingValue(), 1, 'DEFAULT', 2, 'DEFAULT')}">
+                                            Funding Value</p>
+                                    </div><!-- col -->
+                                </div><!-- row -->
+                            </div><!-- card -->
+                        </div><!-- col-6 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <input class="form-control" th:field="*{warehouse}"
+                               th:value="*{warehouse}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                /*<![CDATA[*/
+                var gst = /*[[${gst}]]*/ '18';
+                /*]]>*/
+
+                $('#structureInsurance').on('change', function () {
+                    var val = $("#structureInsurance option:selected").html();
+                    if (val.toLowerCase() != 'no') {
+                        $('.structureinsurance').show();
+                    } else {
+                        $('.structureinsurance').hide();
+                    }
+                }).change();
+
+                $('#license').on('change', function () {
+                    var val = $("#license option:selected").html();
+                    if (val.toLowerCase() != 'no') {
+                        $('.haslicense').show();
+                    } else {
+                        $('.haslicense').hide();
+                    }
+                }).change();
+
+                $('#agreementType').on('change', function () {
+                    var val = $("#agreementType option:selected").html();
+                    if (val.toLowerCase() == 'actual') {
+                        $('.franchisetype').hide();
+                        $('.actualtype').show();
+                    } else if (val.toLowerCase() == 'franchise') {
+                        $('.franchisetype').show();
+                        $('.actualtype').hide();
+                    } else if (val.toLowerCase() == 'sub lease') {
+                        $('.franchisetype').hide();
+                        $('.actualtype').hide();
+                        $("#rent").val(1);
+                    } else if (val.toLowerCase() == 'wms') {
+                        $('.franchisetype').hide();
+                        $('.actualtype').hide();
+                        $("#rent").val(0);
+                    } else if (val.toLowerCase() == 'lease') {
+                        $('.franchisetype').hide();
+                        $('.actualtype').show();
+                    }
+                }).change();
+
+                $('#locationType').on('change', function () {
+                    var val = $("#locationType option:selected").html();
+                    if (val.toLowerCase() != 'standalone') {
+                        $('.factory').show();
+                    } else {
+                        $('.factory').hide();
+                    }
+                }).change();
+
+                $("#rent").change(function () {
+                    updateRentDetails();
+                });
+
+                $('#gstApplicable').on('change', function () {
+                    updateRentDetails();
+                }).change();
+
+                function updateRentDetails() {
+                    var val = $('#gstApplicable').val();
+                    var rent = $("#rent").val();
+                    var length = $("#length").val();
+                    var breadth = $("#breadth").val();
+                    var height = $("#height").val();
+                    if (rent && length && breadth && height) {
+                        var effectiveRent = rent / (length * breadth);
+                        $("#effectiverent").html(effectiveRent.toFixed(2));
+                        $("#effectiverent").show();
+                        if (val == 1) {
+                            var effectiveRentWithGst = effectiveRent + (effectiveRent * (gst / 100));
+                            $("#effectiverentgst").html(effectiveRentWithGst.toFixed(2));
+                            $("#effectiverentgst").show();
+                        } else {
+                            $("#effectiverentgst").html(effectiveRent.toFixed(2));
+                            $("#effectiverentgst").show();
+                        }
+                    }
+                }
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

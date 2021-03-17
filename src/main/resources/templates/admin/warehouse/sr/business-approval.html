@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/business-approval-save'}"
+                      th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + model.sr.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + model.sr.id}"
+                                           th:href="${'#collapse' + model.sr.id}"
+                                           th:text="${model.sr.srNumber}">
+                                            SR Number
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + model.sr.id}"
+                                         th:id="${'collapse' + model.sr.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.number}">
+                                                                    SR Number
+                                                                </td>
+                                                                <td th:text="${srDomain.sr.srNumber}">SR Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.date}">
+                                                                    Date Of Deposit
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="dumpingDate: ${srDomain.getDumpingDate()}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-dark"
+                                                                                      th:text="${#dates.format(dumpingDate,'dd-MMM-yyyy')}">Dumping Date</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.warehousename}">
+                                                                    Warehouse Name
+                                                                </td>
+                                                                <td th:text="${srDomain.sr.contract.warehouseNameSRWR}">
+                                                                    Warehouse Name
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.warehouseaddress}">
+                                                                    Warehouse Address
+                                                                </td>
+                                                                <td th:text="${srDomain.sr.contract.warehouse.fullAddress}">
+                                                                    Warehouse Address
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.clientname}">
+                                                                    Client Name
+                                                                </td>
+                                                                <td th:text="${srDomain.sr.contract.client.name}">
+                                                                    Client Name
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.commoditydetails}">
+                                                                    Commodity Details
+                                                                </td>
+                                                                <td th:text="${srDomain.sr.contract.commoditiesFriendlyName}">
+                                                                    Commodity Details
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.noofpackages}">
+                                                                    Number Of Packages
+                                                                </td>
+                                                                <td th:text="${srDomain.friendlyTotal}">
+                                                                    Number Of Packages
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.weight}">
+                                                                    Weight
+                                                                </td>
+                                                                <td th:text="${srDomain.friendlyWeight}">
+                                                                    Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.privateidentification}">
+                                                                    Private Identification
+                                                                </td>
+                                                                <td th:text="${srDomain.cads}">
+                                                                    Private Identification
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.weighbridge}">
+                                                                    Weighbridge
+                                                                </td>
+                                                                <td th:text="${srDomain.weighbridges}">
+                                                                    Weighbridge
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.insurancedetails}">
+                                                                    Insurance Details
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="insurance: ${srDomain.insuranceList}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.natureofpolicy}">Nature Of Policy</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${insurance.policyType.name}">Nature Of Policy</span>
+                                                                            </p>
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.policynumber}">Policy Number</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${insurance.policyNumber}">Policy Number</span>
+                                                                            </p>
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.insuredamount}">Insured Amount</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${insurance.premiumAmount}">Insured Amount</span>
+                                                                            </p>
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.insurancestart}">Insurance Start Date</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${#dates.format(insurance.effectiveFrom,'dd-MMM-yyyy')}">Insurance Start Date</span>
+                                                                            </p>
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.insuranceend}">Insurance End Date</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${#dates.format(insurance.effectiveTo,'dd-MMM-yyyy')}">Insurance End Date</span>
+                                                                            </p>
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="#{admin.table.sr.insurername}">Insurer Name</span>
+                                                                                <span class="text-dark"
+                                                                                      th:text="${insurance.insurer}">Insurer Name</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.spotprice}">
+                                                                    Spot Price
+                                                                </td>
+                                                                <td>
+                                                                    <p class="mg-b-0">
+                                                                        <span class="text-danger"
+                                                                              th:text="#{admin.table.sr.spotprice}">SR Spot Price</span>
+                                                                        <span class="text-dark"
+                                                                              th:text="${model.sr.spotPrice}">SR Spot Price</span>
+                                                                    </p>
+                                                                    <p class="mg-b-0">
+                                                                        <span class="text-danger"
+                                                                              th:text="#{admin.table.sr.systemspotprice}">System Spot Price</span>
+                                                                        <span class="text-dark"
+                                                                              th:text="${spotPrice}"></span>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.valuation}">
+                                                                    Valuation
+                                                                </td>
+                                                                <td th:text="${srDomain.valuation}">
+                                                                    Valuation
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.bankbranch}">
+                                                                    Bank Branch
+                                                                </td>
+                                                                <td th:text="${model.sr.bankBranch.friendlyName}">Bank
+                                                                    Branch
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.businesstype}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.sr.businessType.name}">
+                                                                    Contract
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.qualitychecks}">
+                                                                    Quality Checks
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="weightedQualityCheck: ${srDomain.getWeightedQualityChecks()}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="${weightedQualityCheck.key.friendlyName}">Parameter</span>
+                                                                                <span class="ml-2 text-dark"
+                                                                                      th:text="${weightedQualityCheck.value}">Value</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.sr.qualitychecks}">
+                                                                    Quality Checks
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="qualityCheckDocument: ${srDomain.getQualityCheckDocuments()}">
+                                                                            <p class="mg-b-0">
+                                                                                <a class="tx-indigo"
+                                                                                   target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${qualityCheckDocument.value.getId()}}"
+                                                                                   th:text="${qualityCheckDocument.key}"
+                                                                                   th:title="${qualityCheckDocument.key}">Vehicle
+                                                                                    Number
+                                                                                </a>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-sr="${model.sr.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.sr.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.sr.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{status}">
+                                    <option th:each="status: ${statuses}"
+                                            th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{sr}"
+                               th:value="*{sr}" type="hidden"/>
+                        <input class="form-control" th:field="*{spotPrice}"
+                               th:value="*{spotPrice}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var sr = $(this).data("sr");
+                    if (sr) {
+                        $.ajax({
+                            url: baseUrl + '/sr-remark/getBySr/' + sr,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

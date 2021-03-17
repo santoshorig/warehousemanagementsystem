@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client/edit/'+${client.getId()}}"
+                                            th:text="#{admin.menu.client.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-partner/index/client/'+${client.getId()}}"
+                                            th:text="${client.clientConstitution.partnershipLabel}">
+                        Partners</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-address/edit/client/'+${client.getId()}}"
+                                            th:text="#{admin.menu.client.address}">Address</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-bank/edit/client/'+${client.getId()}}"
+                                            th:text="#{admin.menu.client.bankaccounts}">
+                        Bank Accounts</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-signatory/index/client/'+${client.getId()}}"
+                                            th:text="#{admin.menu.client.signatories}">Signatories</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.documents}">Documents</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.client.friendlyName}">Client Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12 mg-t-10"
+                             th:each="clientDocumentForm, stat: ${model.getClientDocumentForm()}">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span th:text="${clientDocumentForm.clientDocument.documentType.name}">Document Type:</span>
+                                    <span class="tx-danger" th:if="${clientDocumentForm.clientDocument.documentType.mandatory and
+                                        clientDocumentForm.getClientDocument().getDocument() == null}">&nbsp;*</span>
+                                    <small th:if="${clientDocumentForm.getClientDocument().getDocument() != null}">
+                                        <a class="tx-indigo"
+                                           target="_blank"
+                                           th:href="@{'/admin/document/download/'+${clientDocumentForm.getClientDocument().getDocument().getId()}}"
+                                           th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                            Existing
+                                        </a>
+                                    </small>
+                                    <div class="custom-file mg-t-8">
+                                        <input class="custom-file-input"
+                                               th:attrappend="required=${clientDocumentForm.clientDocument.documentType.mandatory and
+                                                clientDocumentForm.getClientDocument().getDocument() == null} ? 'required'"
+                                               th:field="*{clientDocumentForm[__${stat.index}__].upload}"
+                                               type="file">
+                                        <label class="custom-file-label custom-file-label-primary"
+                                               th:text="${clientDocumentForm.clientDocument.documentType.name}">Document
+                                            Type: </label>
+                                    </div><!-- custom-file -->
+                                </div>
+                                <input th:field="*{clientDocumentForm[__${stat.index}__].clientDocument.id}"
+                                       type="hidden"/>
+                                <input th:field="*{clientDocumentForm[__${stat.index}__].clientDocument.document}"
+                                       type="hidden"/>
+                                <input th:field="*{clientDocumentForm[__${stat.index}__].clientDocument.documentType}"
+                                       type="hidden"/>
+                                <input th:field="*{clientDocumentForm[__${stat.index}__].clientDocument.client}"
+                                       type="hidden"/>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.client.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-client="${model.client.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.client.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.client.document.review}">Send for Review: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required="required"
+                                        th:field="*{review}">
+                                    <option th:text="#{admin.form.client.document.review.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.client.document.review.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div>
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{client}" th:value="*{client}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var client = $(this).data("client");
+                    if (client) {
+                        $.ajax({
+                            url: baseUrl + '/client-remark/getByClient/' + client,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

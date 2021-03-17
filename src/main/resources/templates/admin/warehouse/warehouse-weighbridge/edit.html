@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse/edit/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.registration}">
+                        Registration</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-commodity/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.commodity}">Commodity</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-owner/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.owner}">
+                        Owner</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-detail/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.basic}">Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active"
+                                            th:href="@{'/admin/warehouse-weighbridge/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.weighbridge}">Weighbridge</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.manpower}">
+                        Manpower</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.asset}">
+                        Asset</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.consumable}">
+                        Consumable</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.stack}">
+                        Stack</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.cad}">
+                        CAD</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.documents}">
+                        Documents</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.inspection}">
+                        Inspection</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.warehouse.friendlyName}">Warehouse Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseweighbridge.weighbridge}">Weighbridge: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{weighbridge}">
+                                    <option th:each="weighbridge: ${weighbridges}"
+                                            th:text="${weighbridge.name}"
+                                            th:value="${weighbridge.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseweighbridge.location}">Location: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{location}">
+                                    <option th:each="weighbridgeLocation: ${weighbridgeLocations}"
+                                            th:text="${weighbridgeLocation.value}"
+                                            th:value="${weighbridgeLocation.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseweighbridge.type}">Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{type}">
+                                    <option th:each="weighbridgeType: ${weighbridgeTypes}"
+                                            th:text="${weighbridgeType.value}"
+                                            th:value="${weighbridgeType.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseweighbridge.distancefromwarehouse}">Distance from
+                                    Warehouse in mt: </label><span
+                                    class="tx-danger" id="distancefromwarehousemandatorylabel">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0"
+                                       th:field="*{distanceFromWarehouse}"
+                                       th:placeholder="#{admin.form.warehouseweighbridge.distancefromwarehouse}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <input class="form-control" th:field="*{warehouse}"
+                               th:value="*{warehouse}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('#location').on('change', function () {
+                    var location = this.value;
+                    $('#modelForm').parsley().destroy();
+                    if (location != 'Inside') {
+                        $("#distanceFromWarehouse").attr('data-parsley-required', 'true');
+                        $("#distancefromwarehousemandatorylabel").show();
+                    } else {
+                        $("#distanceFromWarehouse").attr('data-parsley-required', 'false');
+                        $("#distancefromwarehousemandatorylabel").hide();
+                    }
+                    $('#modelForm').parsley();
+                }).change();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

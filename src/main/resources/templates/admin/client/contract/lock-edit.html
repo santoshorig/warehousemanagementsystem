@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/lock-save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.contract}">Contract: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" multiple="multiple"
+                                        th:field="*{contractList}">
+                                    <option th:each="contract: ${contracts}"
+                                            th:text="${contract.friendlyName}"
+                                            th:value="${contract.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockinward}">Lock Inward: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lockedInward}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-2 -->
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.locksr}">Lock Sr: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lockedSr}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-2 -->
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockdo}">Lock Do: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lockedDo}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-2 -->
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockoutward}">Lock Outward: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lockedOutward}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-2 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

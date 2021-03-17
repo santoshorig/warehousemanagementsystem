@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client/edit/'+${client.getId()}}"
+                                            th:text="#{admin.menu.client.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="${client.clientConstitution.partnershipLabel}">
+                        Partners</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.address}">Address</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.bankaccounts}">
+                        Bank Accounts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.signatories}">Signatories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.documents}">Documents</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${client.friendlyName}">Client Friendly Name</p>
+            <div th:replace="fragments/messages::messages"></div>
+            <div class="table-wrapper">
+                <table class="table table-bordered display responsive wrap" id="datatable1"
+                       th:if="${!models.isEmpty()}">
+                    <thead class="thead-colored bg-info">
+                    <tr>
+                        <th class="wd-5p" th:text="#{admin.grid.id}">Id</th>
+                        <th class="wd-15p" th:text="#{admin.grid.name}">Name</th>
+                        <th class="wd-15p" th:text="#{admin.grid.active}">Active</th>
+                        <th th:text="#{admin.grid.actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="model :${models}">
+                        <td th:text="${model.id}"></td>
+                        <td th:text="${model.name}"></td>
+                        <td th:text="${model.active}"></td>
+                        <td>
+                            <a class="btn btn-success btn-icon"
+                               sec:authorize="hasAnyRole('MIS_FIELD', 'BD_REVIEWER', 'OPS_REVIEWER')"
+                               th:href="@{'/admin/'+${controller}+'/edit/client/'+${model.client.id}+'/'+${model.id}}"
+                               th:title="#{admin.grid.edit}">
+                                <div><i class="icon ion-edit"></i></div>
+                            </a>
+                            <a class="btn btn-primary btn-icon"
+                               sec:authorize="hasAnyRole('MIS_FIELD', 'BD_REVIEWER', 'OPS_REVIEWER')"
+                               th:href="@{'/admin/'+${controller}+'/edit/client/'+${model.client.id}}"
+                               th:title="#{admin.grid.new}">
+                                <div><i class="icon ion-plus"></i></div>
+                            </a>
+                            <a class="btn btn-warning btn-icon"
+                               th:href="@{'/admin/client-address/edit/client/'+${client.getId()}}"
+                               th:if="${hasEnoughPartners}" th:title="#{admin.grid.next}">
+                                <div><i class="icon ion-arrow-right-a"></i></div>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

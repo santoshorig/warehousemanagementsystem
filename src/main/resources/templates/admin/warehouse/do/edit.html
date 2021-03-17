@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.do.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.do.bags}">
+                        Bags</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{doModel.businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.number}">DO Number: </label>&nbsp;<small
+                                    class="tx-primary"
+                                    th:text="#{admin.helper.donumber}">
+                                (Format is 10-15 digits)
+                            </small>
+                                <input class="form-control" data-parsley-maxlength="15" data-parsley-minlength="10"
+                                       data-parsley-pattern="^[0-9]{10,15}$"
+                                       data-parsley-trigger="change" readonly
+                                       required="" th:field="*{doModel.doNumber}"
+                                       th:placeholder="#{admin.form.do.number}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.date}">DO Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{doModel.doDate}"
+                                       th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.do.date}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.contract}">Contract: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{doModel.contract}">
+                                    <option th:each="contract: ${contracts}"
+                                            th:text="${contract.friendlyName}"
+                                            th:value="${contract.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.weight}">DO Weight (MT): </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{doModel.doWeight}"
+                                       th:placeholder="#{admin.form.do.weight}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.do.doletterdocument}">DO Letter Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.doModel.doLetterDocument == null}">&nbsp;*</span>
+                            <small th:if="${model.doModel.doLetterDocument != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.doModel.doLetterDocument.getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.doModel.doLetterDocument == null} ? 'required'"
+                                       th:field="*{doLetterUpload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.do.doletterdocument}">DO Letter Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.do.doemailDocument}">DO Email Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.doModel.doEmailDocument == null}">&nbsp;*</span>
+                            <small th:if="${model.doModel.doEmailDocument != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.doModel.doEmailDocument.getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.doModel.doEmailDocument == null} ? 'required'"
+                                       th:field="*{doEmailUpload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.do.doemailDocument}">DO Email Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.do.dokycdocument}">DO KYC Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.doModel.doKycDocument == null}">&nbsp;*</span>
+                            <small th:if="${model.doModel.doKycDocument != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.doModel.doKycDocument.getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.doModel.doKycDocument == null} ? 'required'"
+                                       th:field="*{doKycUpload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.do.dokycdocument}">DO KYC Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-6 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{doModel.id}" th:value="*{doModel.id}" type="hidden"/>
+                        <input class="form-control" th:field="*{doModel.status}" th:value="*{doModel.status}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{doModel.outward}" th:value="*{doModel.outward}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.do.documents}">Documents</label>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.documents.client}">Client</p>
+                    <ul class="list-group list-group-striped" id="clientdocuments">
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.documents.warehouse}">Warehouse</p>
+                    <ul class="list-group list-group-striped" id="warehousedocuments">
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.documents.contract}">Contract</p>
+                    <ul class="list-group list-group-striped" id="contractdocuments">
+                    </ul>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.do.remarks}">Remarks</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.remarks.client}">Client</p>
+                    <ul class="list-group list-group-striped" id="clientremarks">
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.remarks.warehouse}">Warehouse</p>
+                    <ul class="list-group list-group-striped" id="warehouseremarks">
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.do.remarks.contract}">Contract</p>
+                    <ul class="list-group list-group-striped" id="contractremarks">
+                    </ul>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                jQuery.fn.extend({
+                    contractdocsremarks: function () {
+                        var contract = $('#doModel\\.contract').chosen().val();
+                        if (contract) {
+                            var getUrl = window.location;
+                            var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                            $.ajax({
+                                url: baseUrl + '/do/getDocumentByContract/' + contract,
+                                type: "GET",
+                                contentType: 'application/json',
+                                beforeSend: function () {
+                                    $("#clientdocuments").empty();
+                                    $("#warehousedocuments").empty();
+                                    $("#contractdocuments").empty();
+                                },
+                                success: function (data) {
+                                    var clientDocuments = '';
+                                    var warehouseDocuments = '';
+                                    var contractDocuments = '';
+                                    if (data.length > 0) {
+                                        $(data).each(function (index, value) {
+                                            if (value.documentFor == 'client') {
+                                                clientDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                            if (value.documentFor == 'warehouse') {
+                                                warehouseDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                            if (value.documentFor == 'contract') {
+                                                contractDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                        });
+                                        $('#clientdocuments').append(clientDocuments);
+                                        $('#warehousedocuments').append(warehouseDocuments);
+                                        $('#contractdocuments').append(contractDocuments);
+                                    }
+                                }
+                            });
+                            $.ajax({
+                                url: baseUrl + '/do/getRemarkByContract/' + contract,
+                                type: "GET",
+                                contentType: 'application/json',
+                                beforeSend: function () {
+                                    $("#clientremarks").empty();
+                                    $("#warehouseremarks").empty();
+                                    $("#contractremarks").empty();
+                                },
+                                success: function (data) {
+                                    var clientRemarks = '';
+                                    var warehouseRemarks = '';
+                                    var contractRemarks = '';
+                                    if (data.length > 0) {
+                                        $(data).each(function (index, value) {
+                                            if (value.remarkFor == 'client') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                clientRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                            if (value.remarkFor == 'warehouse') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                warehouseRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                            if (value.remarkFor == 'contract') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                contractRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                        });
+                                        $('#clientremarks').append(clientRemarks);
+                                        $('#warehouseremarks').append(warehouseRemarks);
+                                        $('#contractremarks').append(contractRemarks);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                // Update basis current contract
+                $(this).contractdocsremarks();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

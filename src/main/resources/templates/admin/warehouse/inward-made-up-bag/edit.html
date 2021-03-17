@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/inward/edit/'+${model.inwardMadeUpBag.inward.getId()}}"
+                                            th:text="#{admin.menu.inward.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.inward.madeupbag}">Made Up Bag</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.inwardMadeUpBag.inward.friendlyName}">Inward Friendly
+                Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inwardmadeupbag.totalbags}">Total Bags: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="digits"
+                                       required=""
+                                       th:field="*{totalBags}"
+                                       th:placeholder="#{admin.form.inwardmadeupbag.totalbags}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inwardmadeupbag.warehousestack}">Warehouse
+                                    Stack: </label><span
+                                    class="tx-danger">&nbsp;*</span><small id="stackdetails"></small>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{inwardMadeUpBag.warehouseStack}">
+                                    <option th:each="warehouseStack: ${warehouseStacks}"
+                                            th:text="${warehouseStack.friendlyName}"
+                                            th:value="${warehouseStack.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-8 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{inwardMadeUpBag.outward}"
+                               th:value="*{inwardMadeUpBag.outward}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{inwardMadeUpBag.id}" th:value="*{inwardMadeUpBag.id}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{inwardMadeUpBag.inward}"
+                               th:value="*{inwardMadeUpBag.inward}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                /*<![CDATA[*/
+                var warehouseStackUsageCount = /*[[${warehouseStackUsageCount}]]*/ 'default';
+                var warehouseStackUsageWeight = /*[[${warehouseStackUsageWeight}]]*/ 'default';
+                var warehouseMadeUpBagStackUsageCount = /*[[${warehouseMadeUpBagStackUsageCount}]]*/ 'default';
+                var bagTypes = /*[[${bagTypes}]]*/ 'default';
+                var stackusagecount = /*[[#{admin.form.inwardtruckbag.currentstackusage}]]*/ 'default';
+                var stackweightcount = /*[[#{admin.form.inwardtruckbag.currentstackbags}]]*/ 'default';
+                var stackmadeupbagusagecount = /*[[#{admin.form.inwardtruckbag.currentmadeupbagstackusage}]]*/ 'default';
+                var stackmadeupbagusagepercentage = /*[[#{admin.form.inwardtruckbag.currentmadeupbagstackpercent}]]*/ 'default';
+                /*]]>*/
+
+                $('#inwardMadeUpBag\\.warehouseStack').on('change', function () {
+                    var id = $(this).val();
+                    var stackdetails = 0;
+                    var weightdetails = 0;
+                    var madeupbagdetails = 0;
+                    var madeupbagdetailspercentage = 0;
+                    if (warehouseStackUsageCount.hasOwnProperty(id)) {
+                        stackdetails += warehouseStackUsageCount[id];
+                    }
+                    if (warehouseStackUsageWeight.hasOwnProperty(id)) {
+                        weightdetails += warehouseStackUsageWeight[id];
+                    }
+                    if (warehouseMadeUpBagStackUsageCount.hasOwnProperty(id)) {
+                        madeupbagdetails += warehouseMadeUpBagStackUsageCount[id];
+                    }
+                    if (madeupbagdetails > 0 && stackdetails > 0) {
+                        madeupbagdetailspercentage = parseFloat((madeupbagdetails / stackdetails) * 100).toFixed(2);
+                    }
+                    $("#stackdetails").html(" " + stackusagecount + " " + stackdetails + " " + stackweightcount + " " + weightdetails + " " +
+                        stackmadeupbagusagecount + " " + madeupbagdetails + " " + stackmadeupbagusagepercentage + " " + madeupbagdetailspercentage);
+                }).change();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse/edit/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.registration}">
+                        Registration</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-commodity/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.commodity}">Commodity</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-owner/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.owner}">
+                        Owner</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-detail/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.basic}">Basic</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-weighbridge/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.weighbridge}">Weighbridge</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-manpower/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.manpower}">
+                        Manpower</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-asset/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.asset}">
+                        Asset</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-consumable/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.consumable}">
+                        Consumable</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-stack/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.stack}">
+                        Stack</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-cad/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.cad}">
+                        CAD</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.documents}">
+                        Documents</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.inspection}">
+                        Inspection</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.warehouse.friendlyName}">Warehouse Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12 mg-t-10"
+                             th:each="warehouseDocumentForm, stat: ${model.getWarehouseDocumentForm()}">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span th:text="${warehouseDocumentForm.warehouseDocument.documentType.name}">Document Type:</span>
+                                    <span class="tx-danger" th:if="${warehouseDocumentForm.warehouseDocument.documentType.mandatory and
+                                        warehouseDocumentForm.getWarehouseDocument().getDocument() == null}">&nbsp;*</span>
+                                    <small th:if="${warehouseDocumentForm.getWarehouseDocument().getDocument() != null}">
+                                        <a class="tx-indigo"
+                                           target="_blank"
+                                           th:href="@{'/admin/document/download/'+${warehouseDocumentForm.getWarehouseDocument().getDocument().getId()}}"
+                                           th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                            Existing
+                                        </a>
+                                    </small>
+                                    <div class="custom-file mg-t-8">
+                                        <input class="custom-file-input"
+                                               th:attrappend="required=${warehouseDocumentForm.warehouseDocument.documentType.mandatory and
+                                                warehouseDocumentForm.getWarehouseDocument().getDocument() == null} ? 'required'"
+                                               th:field="*{warehouseDocumentForm[__${stat.index}__].upload}"
+                                               type="file">
+                                        <label class="custom-file-label custom-file-label-primary"
+                                               th:text="${warehouseDocumentForm.warehouseDocument.documentType.name}">Document
+                                            Type: </label>
+                                    </div><!-- custom-file -->
+                                </div>
+                                <input th:field="*{warehouseDocumentForm[__${stat.index}__].warehouseDocument.id}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseDocumentForm[__${stat.index}__].warehouseDocument.document}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseDocumentForm[__${stat.index}__].warehouseDocument.documentType}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseDocumentForm[__${stat.index}__].warehouseDocument.warehouse}"
+                                       type="hidden"/>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div>
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{warehouse}" th:value="*{warehouse}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.lr.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lr.businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.lr.number}">LR Number: </label>&nbsp;<small
+                                    class="tx-primary"
+                                    th:text="#{admin.helper.lrnumber}">
+                                (Format is 10-15 digits)
+                            </small>
+                                <input class="form-control" data-parsley-maxlength="15" data-parsley-minlength="10"
+                                       data-parsley-pattern="^[0-9]{10,15}$"
+                                       data-parsley-trigger="change" readonly
+                                       required="" th:field="*{lr.lrNumber}" th:placeholder="#{admin.form.lr.number}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.lr.date}">LR Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{lr.lrDate}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.lr.date}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.lr.totalweight}">Total Weight (Mt): </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{totalWeight}"
+                                       th:placeholder="#{admin.form.lr.totalweight}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.lr.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.lr.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.lr.rodocument}">RO Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.lr.roDocument == null}">&nbsp;*</span>
+                            <small th:if="${model.lr.roDocument != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.lr.roDocument.getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.lr.roDocument == null} ? 'required'"
+                                       th:field="*{roUpload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.lr.rodocument}">RO Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.lr.roemaildocument}">RO Email Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.lr.roEmailDocument == null}">&nbsp;*</span>
+                            <small th:if="${model.lr.roEmailDocument != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.lr.roEmailDocument.getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.lr.roEmailDocument == null} ? 'required'"
+                                       th:field="*{roEmailUpload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.lr.roemaildocument}">RO Email Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                    </div>
+                    <div class="row mg-b-10 mg-t-20" th:each="i, inwardStat :${model.lrInwardFormList}">
+                        <div class="col-lg-12">
+                            <p class="text-danger" th:text="${i.friendlyName}">Inward</p>
+                            <div class="row mg-t-10" th:each="ws, wsStat :${i.lrWarehouseStackFormList}">
+                                <div class="col-lg-12">
+                                    <p class="lead pd-10 bg-primary tx-white">
+                                        <span th:text="#{admin.form.lr.stack}">Stack</span>
+                                        <span th:text="${ws.warehouseStack.friendlyName}">Stack</span>
+                                    </p>
+                                    <div class="row mg-t-10" th:each="bt, btStat :${ws.lrBagTypeFormList}">
+                                        <div class="col-lg-6">
+                                            <div class="text-dark">
+                                                <span th:text="#{admin.form.lr.bagtype}">Bag Type</span>
+                                                <span th:text="${bt.bagType.friendlyName}">Bag Type</span>
+                                            </div>
+                                            <div class="text-secondary mg-t-10">
+                                                <span th:text="#{admin.form.lr.bagcount}">Available Bag Count</span>
+                                                <span th:text="${bt.total}">Bag Count</span>
+                                            </div>
+                                            <div class="text-secondary mg-t-10">
+                                                <span th:text="#{admin.form.lr.averagebegweight}">Average Bag Weight (Kg)</span>
+                                                <span th:text="${bt.averageGrossWeight}">Average Bag Weight (Kg)</span>
+                                            </div>
+                                        </div><!-- col-4 -->
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label"
+                                                       th:text="#{admin.form.lr.neededweight}">Needed Weight
+                                                    (Mt): </label>
+                                                <input class="form-control neededweight"
+                                                       data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                                       data-parsley-trigger="change" data-parsley-type="number"
+                                                       min="0"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].neededWeight}"
+                                                       th:placeholder="#{admin.form.lr.neededweight}" type="text">
+                                            </div>
+                                        </div><!-- col-3 -->
+                                        <div class="col-lg-3 weightdetails">
+                                            <div class="form-group">
+                                                <label class="form-control-label"
+                                                       th:text="#{admin.form.lr.neededbagcount}">Needed Bag
+                                                    Count: </label>
+                                                <input class="form-control totalbags" data-parsley-trigger="change"
+                                                       data-parsley-type="digits"
+                                                       readonly
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].neededBags}"
+                                                       th:placeholder="#{admin.form.lr.neededbagcount}" type="text">
+                                                <input class="form-control averageweight"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].averageGrossWeight}"
+                                                       th:value="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].averageGrossWeight}"
+                                                       type="hidden"/>
+                                                <input class="form-control"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].bagType}"
+                                                       type="hidden"/>
+                                                <input class="form-control availablebags"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].lrBagTypeFormList[__${btStat.index}__].total}"
+                                                       type="hidden"/>
+                                                <input class="form-control"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].lrWarehouseStackFormList[__${wsStat.index}__].warehouseStack}"
+                                                       type="hidden"/>
+                                                <input class="form-control"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].inward}"
+                                                       type="hidden"/>
+                                                <input class="form-control"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].totalNetWeight}"
+                                                       type="hidden"/>
+                                                <input class="form-control"
+                                                       th:field="*{lrInwardFormList[__${inwardStat.index}__].totalBags}"
+                                                       type="hidden"/>
+                                            </div>
+                                        </div><!-- col-3 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{sr}" th:value="*{sr}" type="hidden"/>
+                        <input class="form-control" th:field="*{lr.id}" th:value="*{lr.id}" type="hidden"/>
+                        <input class="form-control" th:field="*{lr.status}" th:value="*{lr.status}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                jQuery.fn.extend({
+                    weightcheck: function () {
+                        var valid = false;
+                        var totalWeight = parseFloat($("#totalWeight").val());
+                        var neededWeight = parseFloat($(this).val());
+                        var sumNeededWeights = 0;
+                        $('.neededweight').each(function (index) {
+                            sumNeededWeights += parseFloat($(this).val());
+                        });
+                        $('#totalWeight').parsley().removeError('needed_total_weight');
+                        if (sumNeededWeights == 0) {
+                            $('#totalWeight').parsley().addError('needed_total_weight', {message: "Please enter needed weight values"});
+                        }
+                        if (totalWeight >= sumNeededWeights) {
+                            if (neededWeight > 0) {
+                                $('#totalWeight').parsley().removeError('invalid_total_weight');
+                                $(this).parsley().removeError('invalid_total_bags');
+                                var averageWeight = $(this).parent().parent().next().closest('.weightdetails').find('.averageweight').val();
+                                var totalBags = Math.floor(neededWeight / averageWeight);
+                                var availableBags = $(this).parent().parent().next().closest('.weightdetails').find('.availablebags').val();
+                                if (availableBags > totalBags) {
+                                    $(this).parent().parent().next().closest('.weightdetails').find('.totalbags').val(totalBags);
+                                    valid = true;
+                                } else {
+                                    $(this).parsley().addError('invalid_total_bags', {message: "Available bags needs to be more than needed bags"});
+                                }
+                            } else {
+                                $(this).parent().parent().next().closest('.weightdetails').find('.totalbags').val(0);
+                            }
+                        } else {
+                            $('#totalWeight').parsley().addError('invalid_total_weight', {message: "Total weight should be more than sum of individual needed weights"});
+                        }
+                        return valid;
+                    }
+                });
+
+                jQuery.fn.extend({
+                    totalweightcheck: function () {
+                        var valid = true;
+                        var totalWeight = parseFloat($("#totalWeight").val());
+                        var sumNeededWeights = 0;
+                        $('.neededweight').each(function (index) {
+                            sumNeededWeights += parseFloat($(this).val());
+                        });
+                        $('#totalWeight').parsley().removeError('needed_total_weight');
+                        if (sumNeededWeights == 0) {
+                            $('#totalWeight').parsley().addError('needed_total_weight', {message: "Please enter needed weight values"});
+                            valid = false;
+                        }
+                        return valid;
+                    }
+                });
+
+                var $selector = $('#modelForm'),
+                    form = $selector.parsley();
+
+                $selector.find('button').click(function () {
+                    if ($(this).totalweightcheck()) {
+                        form.validate();
+                    } else {
+                        return false;
+                    }
+                });
+
+                $('.neededweight').on('blur', function () {
+                    $(this).weightcheck();
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

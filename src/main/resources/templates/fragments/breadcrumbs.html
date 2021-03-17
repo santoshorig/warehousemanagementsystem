@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-pageheader" th:fragment="breadcrumbs">
+    <ol class="breadcrumb slim-breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/admin/home}" th:text="#{admin.breadcrumbs.dashboard}">Dashboard</a>
+        </li>
+        <li aria-current="page" class="breadcrumb-item active"
+            th:text="${#strings.capitalizeWords(friendlyController)}">Data Tables
+        </li>
+        <li class="breadcrumb-item"><a th:href="@{'/admin/'+${controller}+'/edit'}"
+                                       th:text="#{admin.breadcrumbs.addnew}">Add New</a></li>
+    </ol>
+    <h6 class="slim-pagetitle" th:text="${friendlyController.toUpperCase()}">Data Tables</h6>
+</div><!-- slim-pageheader -->
+
+</html>

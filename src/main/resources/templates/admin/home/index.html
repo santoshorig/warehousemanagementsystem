@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html th:include="layouts/admindashboard::admindashboard"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li aria-current="page" class="breadcrumb-item active" th:text="#{admin.breadcrumbs.dashboard}">
+                    Dashboard
+                </li>
+            </ol>
+            <h6 class="slim-pagetitle" th:text="#{admin.dashboard.title}">Dashboard</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.alert.alerts}">Alerts</label>
+            <div aria-multiselectable="true" class="accordion-one" id="accordion" role="tablist"
+                 th:if="${insuranceAlerts.size() > 0}">
+                <div class="card">
+                    <div class="card-header" id="headingOne" role="tab">
+                        <a aria-controls="collapseOne" aria-expanded="false" class="tx-gray-800 transition collapsed"
+                           data-parent="#accordion"
+                           data-toggle="collapse" href="#collapseOne">
+                            <span class="text-danger" th:text="${insuranceAlerts.size()}">Insurance Count</span>
+                            <span class="ml-1" th:text="#{admin.alert.insurance.title}">Expired/Expiring Insurance Policies</span>
+                        </a>
+                    </div><!-- card-header -->
+                    <div aria-labelledby="headingOne" class="collapse" id="collapseOne" role="tabpanel">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item" th:each="insuranceAlert :${insuranceAlerts}">
+                                    <p class="mg-b-0">
+                                        <i class="fa fa-minus tx-danger mg-r-8"></i>
+                                        <strong class="tx-inverse tx-medium">
+                                            <span class="tx-bold tx-indigo"
+                                                  th:text="${insuranceAlert.friendlyName}"></span>&nbsp;
+                                            <span th:text="#{admin.alert.insurance.expireson}"></span>&nbsp;
+                                            <span class="tx-indigo"
+                                                  th:text="${#dates.format(insuranceAlert.effectiveTo, 'dd-MMM-yyyy')}"></span>&nbsp;
+                                        </strong>
+                                        <span class="text-muted">
+                                            <a th:href="@{'/admin/insurance/edit/'+${insuranceAlert.id}}"
+                                               th:text="#{admin.alert.insurance.view}"
+                                               th:title="#{admin.grid.view}">view</a>
+                                        </span>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.dashboard.tile.stats}">Statistics</label>
+            <div class="card card-dash-one">
+                <div class="row no-gutters">
+                    <div class="col-lg-3">
+                        <i class="icon ion-ionic"></i>
+                        <div class="dash-content">
+                            <label class="tx-primary" th:text="#{admin.dashboard.clients}">Clients</label>
+                            <h2 th:text="${clientsCount}">0</h2>
+                        </div><!-- dash-content -->
+                    </div><!-- col-3 -->
+                    <div class="col-lg-3">
+                        <i class="icon ion-ios-analytics-outline"></i>
+                        <div class="dash-content">
+                            <label class="tx-primary" th:text="#{admin.dashboard.warehouses}">Warehouses</label>
+                            <h2 th:text="${warehousesCount}">0</h2>
+                        </div><!-- dash-content -->
+                    </div><!-- col-3 -->
+                    <div class="col-lg-3">
+                        <i class="icon ion-arrow-shrink"></i>
+                        <div class="dash-content">
+                            <label class="tx-primary" th:text="#{admin.dashboard.employees}">Employees</label>
+                            <h2 th:text="${employeesCount}">0</h2>
+                        </div><!-- dash-content -->
+                    </div><!-- col-3 -->
+                    <div class="col-lg-3">
+                        <i class="icon ion-hammer"></i>
+                        <div class="dash-content">
+                            <label class="tx-primary" th:text="#{admin.dashboard.locations}">Locations</label>
+                            <h2 th:text="${locationsCount}">0</h2>
+                        </div><!-- dash-content -->
+                    </div><!-- col-3 -->
+                </div><!-- row -->
+            </div><!-- card -->
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20" sec:authorize="hasRole('OPS_BH_APPROVER')">
+            <div class="card card-todo">
+                <h6 class="slim-card-title" th:text="#{admin.notification.inward}">Inward Notifications</h6>
+                <div class="todo-list">
+                    <div class="todo-item" th:each="inwardNotification :${inwardNotifications}">
+                        <label class="ckbox">
+                            <input class="readnotification" th:id="${inwardNotification.id}" type="checkbox"><span
+                                th:text="${inwardNotification.notification}">Notification</span>
+                        </label>
+                    </div><!-- todo-item -->
+                </div><!-- todo-list -->
+            </div><!-- card -->
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.dashboard.tile.iwowgraph}">IW/OW Two Week Graph</label>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bd pd-10">
+                        <div class="ht-300 ht-sm-400" id="iwowLine"></div>
+                    </div>
+                </div><!-- col-12 -->
+            </div>
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.dashboard.tile.graphs }">Graphs</label>
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="bd pd-10">
+                        <h5 th:text="#{admin.dashboard.graph.warehouse}">Warehouse Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="warehouseDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-xl-4">
+                    <div class="bd pd-5">
+                        <h5 th:text="#{admin.dashboard.graph.client}">Client Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="clientDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-xl-4">
+                    <div class="bd pd-5">
+                        <h5 th:text="#{admin.dashboard.graph.contract}">Contract Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="contractDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+            </div>
+            <div class="row mg-t-20">
+                <div class="col-xl-4">
+                    <div class="bd pd-5">
+                        <h5 th:text="#{admin.dashboard.graph.inward}">Inward Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="inwardDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-xl-4">
+                    <div class="bd pd-5">
+                        <h5 th:text="#{admin.dashboard.graph.sr}">SR Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="srDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-xl-4">
+                    <div class="bd pd-5">
+                        <h5 th:text="#{admin.dashboard.graph.lr}">LR Donut Graph</h5>
+                        <div class="ht-200 ht-sm-300" id="lrDonut"></div>
+                    </div>
+                </div><!-- col-4 -->
+            </div><!-- row -->
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.dashboard.tile.overview}">Overview Map</label>
+            <div class="ht-600 ht-sm-600" id="map"></div>
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var locations = /*[[${locationList}]]*/ [];
+        var graphData = /*[[${graphData}]]*/ [];
+        /*] ]>*/
+        $(document).ready(
+            function () {
+                $('.readnotification').on('change', function () {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var id = $(this).attr('id');
+                    var checked = $(this).prop("checked");
+                    $.ajax({
+                        url: baseUrl + '/notification/update-status/' + id + '/' + checked,
+                        type: "GET",
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (!data) {
+                                this.prop("checked", false);
+                            }
+                        }
+                    });
+                });
+
+                /**
+                 * Draw donut graphs
+                 *
+                 * @param graphContainer
+                 * @param data
+                 */
+                function drawDonutGraph(graphContainer, data) {
+                    var donutData = [];
+                    var colorData = [];
+                    $.each(data, function (status, count) {
+                        var rand = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+                        var color = '#' + rand[Math.ceil(Math.random() * 15)] + rand[Math.ceil(Math.random() * 15)] + rand[Math.ceil(Math.random() * 15)] +
+                            rand[Math.ceil(Math.random() * 15)] + rand[Math.ceil(Math.random() * 15)] + rand[Math.ceil(Math.random() * 15)];
+                        donutData.push({label: status, value: count});
+                        colorData.push(color);
+                    });
+                    new Morris.Donut({
+                        element: graphContainer,
+                        data: donutData,
+                        colors: colorData,
+                        resize: true
+                    });
+                }
+
+                // Donut graph
+                drawDonutGraph('warehouseDonut', graphData.warehouseStatusMap);
+                drawDonutGraph('clientDonut', graphData.clientStatusMap);
+                drawDonutGraph('contractDonut', graphData.contractStatusMap);
+                drawDonutGraph('inwardDonut', graphData.inwardStatusMap);
+                drawDonutGraph('srDonut', graphData.srStatusMap);
+                drawDonutGraph('lrDonut', graphData.lrStatusMap);
+
+                var inwardOutwardData = [];
+                $.each(graphData.inwardOutwardQuantityMap, function (date, inwardOutwardWeight) {
+                    inwardOutwardData.push({y: date, a: inwardOutwardWeight[0], b: inwardOutwardWeight[1]});
+                });
+
+                new Morris.Line({
+                    element: 'iwowLine',
+                    data: inwardOutwardData,
+                    xkey: 'y',
+                    xLabels: 'day',
+                    xLabelAngle: 45,
+                    xLabelFormat: function (d) {
+                        var weekdays = new Array(7);
+                        weekdays[0] = "SUN";
+                        weekdays[1] = "MON";
+                        weekdays[2] = "TUE";
+                        weekdays[3] = "WED";
+                        weekdays[4] = "THU";
+                        weekdays[5] = "FRI";
+                        weekdays[6] = "SAT";
+                        return weekdays[d.getDay()] + '-' +
+                            ("0" + (d.getDate())).slice(-2);
+                    },
+                    ykeys: ['a', 'b'],
+                    labels: ['Inward', 'Outward'],
+                    lineColors: ['#14A0C1', '#5058AB'],
+                    lineWidth: 1,
+                    ymax: 'auto 100',
+                    gridTextSize: 11,
+                    hideHover: 'auto',
+                    smooth: false,
+                    resize: true
+                });
+
+            }
+        );
+
+        function initMap() {
+            var india = {lat: 20.593683, lng: 78.962883};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 5,
+                center: india,
+                styles: [
+                    {
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#1d2c4d"
+                            }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#8ec3b9"
+                            }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "color": "#1a3646"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.country",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#4b6878"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.land_parcel",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#64779e"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.province",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#4b6878"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "landscape.man_made",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#334e87"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "landscape.natural",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#023e58"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#283d6a"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#6f9ba5"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "color": "#1d2c4d"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi.park",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#023e58"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi.park",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#3C7680"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#304a7d"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#98a5be"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "color": "#1d2c4d"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#2c6675"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#255763"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#b0d5ce"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "color": "#023e58"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#98a5be"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "color": "#1d2c4d"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.line",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#283d6a"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#3a4762"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#0e1626"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#4e6d70"
+                            }
+                        ]
+                    }
+                ]
+            });
+            var markers = locations.map(function (location, i) {
+                var lat = location.location.latitude;
+                var lng = location.location.longitude;
+                var latLng = new google.maps.LatLng(lat, lng);
+                var locationName = location.location.name;
+                var warehouseCount = location.warehouseCount;
+                var clientCount = location.clientCount;
+                var markerContent = '<span class="text-warning tx-bold">Location: ' + locationName + '</span>' +
+                    '<span class="pl-5 text-danger tx-bold">Warehouses: ' + warehouseCount + '</span>' +
+                    '<span class="pl-5 text-info tx-bold">Clients: ' + clientCount + '</span>';
+                var markerInfowindow = new google.maps.InfoWindow({
+                    content: markerContent
+                });
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: '/custom/plugins/map/img/marker/warehouse.png'
+                });
+                marker.addListener('click', function () {
+                    markerInfowindow.open(map, marker);
+                });
+                return marker;
+            });
+            // Add a marker clusterer to manage the markers.
+            var markerCluster = new MarkerClusterer(map, markers, {imagePath: '/custom/plugins/map/img/cluster/m'});
+        }
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

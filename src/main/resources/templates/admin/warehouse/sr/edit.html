@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.sr.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.sr.qc}">
+                        QC</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{sr.businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.number}">SR Number: </label>&nbsp;<small
+                                    class="tx-primary"
+                                    th:text="#{admin.helper.srnumber}">
+                                (Format is 10-15 digits)
+                            </small>
+                                <input class="form-control" data-parsley-maxlength="15" data-parsley-minlength="10"
+                                       data-parsley-pattern="^[0-9]{10,15}$"
+                                       data-parsley-trigger="change" readonly
+                                       required="" th:field="*{sr.srNumber}" th:placeholder="#{admin.form.sr.number}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                        	<div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.code}">SR Code: </label><span
+                                    class="tx-primary"></span>
+                                <input class="form-control" data-parsley-maxlength="15" data-parsley-minlength="0"
+                                       th:field="*{sr.code}"
+                                       th:placeholder="#{admin.form.sr.code}"
+                                       th:readonly="${!canEdit}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.date}">SR Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{sr.srDate}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.sr.date}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.bankbranch}">Bank Branch: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{sr.bankBranch}">
+                                    <option value="">None</option>
+                                    <option th:each="bankBranch: ${bankBranches}"
+                                            th:text="${bankBranch.friendlyName}"
+                                            th:value="${bankBranch.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.contract}">Contract: </label>&nbsp;
+                                       <small class="contractwarning tx-danger tx-bold hide"
+                                       th:text="#{admin.form.sr.contract.warning}"></small>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{sr.contract}">
+                                    <option th:each="contract: ${contracts}"
+                                            th:text="${contract.friendlyName}"
+                                            th:value="${contract.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.spotprice}">Spot Price (MT): </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-min="1" data-parsley-maxlength="13" data-parsley-trigger="change"
+                                 	   data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-type="number" required=""
+                                       th:field="*{sr.spotPrice}"
+                                       th:placeholder="#{admin.form.sr.spotprice}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.systemspotprice}">System Spot Price: </label><span
+                                    class="tx-danger"></span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="number"
+                                       th:field="*{sr.systemSpotPrice}"
+                                       th:readonly="true"
+                                       th:placeholder="#{admin.form.sr.systemspotprice}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.cad}">CAD: </label>
+                                <select class="form-control select2-show-search" multiple="multiple"
+                                        th:field="*{inwardList}">
+                                    <option th:each="inward: ${inwards}"
+                                            th:text="${inward.simpleCadName}"
+                                            th:value="${inward.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.validityFromDate}">SR Validity From Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{sr.validityFromDate}"
+                                       th:attr="min=${model.sr.validityFromDate != null ? #dates.format(model.sr.validityFromDate, 'YYYY-MM-dd') :
+                                       #dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.sr.validityFromDate}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.validityToDate}">SR Validity TO Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                       <small class="toDateWarning tx-danger tx-bold hide"
+                                       th:text="#{admin.form.sr.validityToDate.warning}"></small>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{sr.validityToDate}"
+                                       th:attr="min=${model.sr.validityToDate != null ? #dates.format(model.sr.validityToDate, 'YYYY-MM-dd') :
+                                       #dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.sr.validityToDate}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.sr.revalidationdate}">SR Revalidation Date: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{sr.reValidationDate}"
+                                       th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.sr.revalidationdate}"
+                                       type="date">
+                                 <small class="revalidationWarning tx-danger tx-bold hide"
+                                       th:text="#{admin.form.sr.revalidationdate.warning}"></small>
+                            </div>
+                        </div><!-- col-6 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{sr.id}" th:value="*{sr.id}" type="hidden"/>
+                        <input class="form-control" th:field="*{sr.status}" th:value="*{sr.status}" type="hidden"/>
+                        <button class="btn btn-primary bd-0 enableOnInput" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.sr.documents}">Documents</label>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.documents.client}">Client</p>
+                    <ul class="list-group list-group-striped" id="clientdocuments">
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.documents.warehouse}">Warehouse</p>
+                    <ul class="list-group list-group-striped" id="warehousedocuments">
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.documents.contract}">Contract</p>
+                    <ul class="list-group list-group-striped" id="contractdocuments">
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.documents.inward}">Inward</p>
+                    <ul class="list-group list-group-striped" id="inwarddocuments">
+                    </ul>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+
+        <div class="section-wrapper mg-t-20">
+            <label class="section-title" th:text="#{admin.sr.remarks}">Remarks</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.remarks.client}">Client</p>
+                    <ul class="list-group list-group-striped" id="clientremarks">
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.remarks.warehouse}">Warehouse</p>
+                    <ul class="list-group list-group-striped" id="warehouseremarks">
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <p class="mg-b-20 mg-sm-b-40" th:text="#{admin.sr.remarks.contract}">Contract</p>
+                    <ul class="list-group list-group-striped" id="contractremarks">
+                    </ul>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                jQuery.fn.extend({
+                    contractdocsremarks: function () {
+                        var contract = $('#sr\\.contract').chosen().val();
+                        if (contract) {
+                            var getUrl = window.location;
+                            var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                            $.ajax({
+                                url: baseUrl + '/sr/getDocumentByContract/' + contract,
+                                type: "GET",
+                                contentType: 'application/json',
+                                beforeSend: function () {
+                                    $("#clientdocuments").empty();
+                                    $("#warehousedocuments").empty();
+                                    $("#contractdocuments").empty();
+                                },
+                                success: function (data) {
+                                    var clientDocuments = '';
+                                    var warehouseDocuments = '';
+                                    var contractDocuments = '';
+                                    if (data.length > 0) {
+                                        $(data).each(function (index, value) {
+                                            if (value.documentFor == 'client') {
+                                                clientDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                            if (value.documentFor == 'warehouse') {
+                                                warehouseDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                            if (value.documentFor == 'contract') {
+                                                contractDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            }
+                                        });
+                                        $('#clientdocuments').append(clientDocuments);
+                                        $('#warehousedocuments').append(warehouseDocuments);
+                                        $('#contractdocuments').append(contractDocuments);
+                                    }
+                                }
+                            });
+                            $.ajax({
+                                url: baseUrl + '/sr/getRemarkByContract/' + contract,
+                                type: "GET",
+                                contentType: 'application/json',
+                                beforeSend: function () {
+                                    $("#clientremarks").empty();
+                                    $("#warehouseremarks").empty();
+                                    $("#contractremarks").empty();
+                                },
+                                success: function (data) {
+                                    var clientRemarks = '';
+                                    var warehouseRemarks = '';
+                                    var contractRemarks = '';
+                                    if (data.length > 0) {
+                                        $(data).each(function (index, value) {
+                                            if (value.remarkFor == 'client') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                clientRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                            if (value.remarkFor == 'warehouse') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                warehouseRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                            if (value.remarkFor == 'contract') {
+                                                var remarkDate = new Date(value.remarkDate);
+                                                contractRemarks += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<em>' + value.remark + '</em><br/><small class="tx-primary tx-bold">'
+                                                    + value.remarkUser.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                                    ')</em></small><br/><br/></li>';
+                                            }
+                                        });
+                                        $('#clientremarks').append(clientRemarks);
+                                        $('#warehouseremarks').append(warehouseRemarks);
+                                        $('#contractremarks').append(contractRemarks);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                jQuery.fn.extend({
+                    inwarddocsremarks: function () {
+                        var inwards = $('#inwardList').chosen().val();
+                        if (inwards && inwards.length > 0) {
+                            var getUrl = window.location;
+                            var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                            $(inwards).each(function (index, inward) {
+                                $.ajax({
+                                    url: baseUrl + '/sr/getInwardDocument/' + inward,
+                                    type: "GET",
+                                    contentType: 'application/json',
+                                    beforeSend: function () {
+                                        $("#inwarddocuments").empty();
+                                    },
+                                    success: function (data) {
+                                        var inwardDocuments = '';
+                                        if (data.length > 0) {
+                                            $(data).each(function (index, value) {
+                                                inwardDocuments += '<li class="list-group-item"><p class="mg-b-0">' +
+                                                    '<span class="text-muted">' + value.documentType + '</span>' +
+                                                    '<a target="_blank" href="' + baseUrl + '/document/download/' + value.documentId + '"><i class="icon ion-folder"></i></a></li>';
+                                            });
+                                            $('#inwarddocuments').append(inwardDocuments);
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+
+                // Update basis current contract
+                $(this).contractdocsremarks();
+                // Update basis current inwardlist
+                $(this).inwarddocsremarks();
+                
+                $('#sr\\.reValidationDate').on('change', function () {
+                     var validityToDate = $("#sr\\.validityToDate").val();
+                     var reValidationDate = $("#sr\\.reValidationDate").val();
+                     var toDate = new Date(validityToDate);
+                     var newDate = toDate.setMonth(toDate.getMonth() + 3);
+                     if (Date.parse(reValidationDate) >= newDate) {
+                           $(".revalidationWarning").hide();
+                     } else {
+                           $(".revalidationWarning").show();
+                     }
+                });
+                        
+                $('#sr\\.contract').on('change', function () {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var contract = this.value;
+                    var srDate = $("#sr\\.srDate").val();
+                    $.ajax({
+                        url: baseUrl + '/sr/getCadByContract/' + contract,
+                        type: "GET",
+                        contentType: 'application/json',
+                        beforeSend: function () {
+                            $("#inwardList").empty();
+                        },
+                        success: function (data) {
+                            var options = '';
+                            if (data.length > 0) {
+                                $(data).each(function (index) {
+                                    options += '<option value="' + data[index].inward.id + '">' +
+                                        data[index].inward.id + ' / (' + data[index].inward.warehouseCad.bookNumber + '-' + data[index].inward.warehouseCad.serialNumber + ') / '
+                                        + data[index].totalBags + ' units / ' + data[index].totalNetWeight + ' MT </option>';
+                                });
+                            }
+                            $('#inwardList').append(options);
+                            $('#inwardList').trigger("chosen:updated");
+                            $('#inwardList').trigger("liszt:updated");
+                        }
+                    });
+                    $.ajax({
+                        url: baseUrl + '/sr/getSpotPriceByContract/' + contract + '/' + srDate,
+                        type: "GET",
+                        contentType: 'application/json',
+                        beforeSend: function () {
+                            $("#sr\\.systemSpotPrice").val(0);
+                        },
+                        success: function (data) {
+                            $("#sr\\.systemSpotPrice").val(data);
+                        }
+                    });
+                    $.ajax({
+                        url: baseUrl + '/sr/checkContractExpiry/' + contract,
+                        type: "GET",
+                        contentType: 'application/json',
+                        beforeSend: function () {
+                            $("#contractwarning").val("");
+                        },
+                        success: function (data) {
+                        	if (data) {
+                        		$(".contractwarning").show();
+                        		$('.enableOnInput').prop('disabled', true);
+                        	} else {
+                        		$(".contractwarning").hide();
+                        		$('.enableOnInput').prop('disabled', false);
+                        	}
+                        }
+                    });
+                    $(this).contractdocsremarks();
+                });
+                $('#inwardList').on('change', function () {
+                    $(this).inwarddocsremarks();
+                });
+                $('#sr\\.validityFromDate').on('change', function () {
+                    var date = $("#sr\\.validityFromDate").val();
+                    $("#sr\\.validityToDate").prop('min', date);
+                });
+                
+                $('#sr\\.srDate').on('change', function () {
+                    var date = $("#sr\\.srDate").val();
+                    $("#sr\\.validityFromDate").prop('min', date);
+                    $("#sr\\.validityFromDate").val(date);
+                });
+                
+                $('#sr\\.validityToDate').on('change', function () {
+                    var startDate = $("#sr\\.validityFromDate").val();
+                    var endDate = $("#sr\\.validityToDate").val();
+                    var start = new Date(startDate);
+                    var end = new Date(endDate);
+                    var diffDate = (end - start) / (1000 * 60 * 60 * 24);
+                    var days = Math.round(diffDate);
+                    if (days > 360) {
+                		$(".toDateWarning").show();
+                		$('.enableOnInput').prop('disabled', true);
+                    } else {
+                		$(".toDateWarning").hide();
+                		$('.enableOnInput').prop('disabled', false);
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

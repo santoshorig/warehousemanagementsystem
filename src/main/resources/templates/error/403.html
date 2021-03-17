@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Meta -->
+    <meta name="description" th:content="#{header.title}">
+    <meta name="author" th:content="#{header.author}">
+
+    <title th:text="#{header.title}">Title</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" sizes="16x16" th:href="@{/custom/img/favicon.ico}"/>
+
+    <!-- Vendor css -->
+    <link rel="stylesheet" th:href="@{/slim/lib/font-awesome/css/font-awesome.css}">
+    <link rel="stylesheet" th:href="@{/slim/lib/Ionicons/css/ionicons.css}">
+
+    <!-- Slim CSS -->
+    <link rel="stylesheet" th:href="@{/slim/css/slim.css}">
+
+</head>
+<body>
+
+<div class="page-error-wrapper">
+
+    <div>
+        <h1 class="error-title" th:text="#{error.403}">Error Code</h1>
+        <h5 class="tx-sm-24 tx-normal" th:text="#{error.403.message}">Error Message</h5>
+        <p class="mg-b-50"><a class="btn btn-error" th:href="@{/login}" th:text="#{error.403.back}">Back to
+            Home</a></p>
+    </div>
+
+</div><!-- page-error-wrapper -->
+
+<script th:src="@{/slim/lib/jquery/js/jquery.js}"></script>
+<script th:src="@{/slim/lib/popper.js/js/popper.js}"></script>
+<script th:src="@{/slim/lib/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{/slim/lib/jquery.cookie/js/jquery.cookie.js}"></script>
+<script th:src="@{/slim/lib/select2/js/select2.min.js}"></script>
+<script th:src="@{/slim/lib/parsleyjs/js/parsley.js}"></script>
+
+<script th:src="@{/slim/js/slim.js}"></script>
+
+</body>
+</html>

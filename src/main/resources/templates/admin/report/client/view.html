@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/reportbreadcrumbs::reportbreadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="row mg-b-10">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mg-b-0">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.table.property}">Property</th>
+                                <th th:text="#{admin.table.value}">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="#{admin.table.client.applicationnumber}">Application Number</td>
+                                <td th:text="${model.client.code}">Code</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.name}">Name</td>
+                                <td th:text="${model.client.name}">Name</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.mobilenumber}">Mobile Number</td>
+                                <td th:text="${model.client.mobileNumber}">Mobile Number</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.businessaddress}">Business Address</td>
+                                <td th:text="${model.businessAddress}">Business Address</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.natureoforganization}">Nature Of Organization</td>
+                                <td th:text="${model.client.clientConstitution.name}">Client Constitution</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.typeofbusiness}">Type Of Business</td>
+                                <td th:text="${model.client.clientType.name}">Client Type</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.dateofincorporation}">Date Of Incorporation</td>
+                                <td th:text="${#dates.format(model.client.dateOfIncorporation, 'dd-MMM-yyyy')}">Date Of
+                                    Incorporation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.partners}">Partners</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="clientPartner: ${model.clientPartner}">
+                                            <p class="mg-b-0">
+                                                <a class="btn btn-oblong btn-outline-primary btn-block mg-b-10 viewpartner"
+                                                   href="javascript:void(0);"
+                                                   th:data-partner="${clientPartner.id}"
+                                                   th:text="${clientPartner.name}">Partner Name
+                                                </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.documents}">Documents</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="clientDocument: ${model.clientDocument}">
+                                            <p class="mg-b-0">
+                                                <span class="text-muted" th:text="${clientDocument.documentType.name}">Document Type</span>
+                                                <a target="_blank"
+                                                   th:href="@{'/admin/document/download/'+${clientDocument.document.id}}"><i
+                                                        class="icon ion-folder"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.remarks}">Remarks</td>
+                                <td>
+                                    <a class="viewremarks"
+                                       href="javascript:void(0);" th:data-client="${model.client.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+        <div class="modal fade" id="partnermodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.details}">
+                            Partner</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mg-b-0">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{admin.table.property}">Property</th>
+                                    <th th:text="#{admin.table.value}">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.name}">Name</td>
+                                    <td class="partnervalues" id="partnername"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.fathersname}">Father's Name</td>
+                                    <td class="partnervalues" id="partnerfathersname"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.dateofbirth}">Date Of Birth</td>
+                                    <td class="partnervalues" id="partnerdateofbirth"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.mobilenumber}">Mobile Number</td>
+                                    <td class="partnervalues" id="partnermobilenumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.address}">Address</td>
+                                    <td class="partnervalues" id="partneraddress"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.cibilscore}">Cibil Score</td>
+                                    <td class="partnervalues" id="partnercibilscore"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.cibilcomments}">Cibil Comments</td>
+                                    <td class="partnervalues" id="partnercibilcomments"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.cibildocument}">Cibil Document</td>
+                                    <td class="partnervalues" id="partnercibildocument"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.highmarkscore}">Highmark Score</td>
+                                    <td class="partnervalues" id="partnerhighmarkscore"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.highmarkcomments}">Highmark Comments</td>
+                                    <td class="partnervalues" id="partnerhighmarkcomments"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.highmarkdocument}">Highmark Document</td>
+                                    <td class="partnervalues" id="partnerhighmarkdocument"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.highmarkriskcategory}">Highmark Risk
+                                        Category
+                                    </td>
+                                    <td class="partnervalues" id="partnerhighmarkriskcategory"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.pannumber}">PAN Number</td>
+                                    <td class="partnervalues" id="partnerpannumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.aadharnumber}">Aadhar Number</td>
+                                    <td class="partnervalues" id="partneraadharnumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.active}">Active</td>
+                                    <td class="partnervalues" id="partneractive"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var client = $(this).data("client");
+                    if (client) {
+                        $.ajax({
+                            url: baseUrl + '/client-remark/getByClient/' + client,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+
+                $('.viewpartner').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var partner = $(this).data("partner");
+                    if (partner) {
+                        $.ajax({
+                            url: baseUrl + '/client-partner/get/' + partner,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $(".partnervalues").html('');
+                            },
+                            success: function (data) {
+                                if (data) {
+                                    $("#partnername").html(data.name);
+                                    $("#partnerfathersname").html(data.fathersName);
+                                    $("#partnerdateofbirth").html(data.dob);
+                                    $("#partnermobilenumber").html(data.mobileNumber);
+                                    $("#partneraddress").html(data.fullAddress);
+                                    $("#partnercibilscore").html(data.cibilScore);
+                                    $("#partnercibilcomments").html(data.cibilComments);
+                                    if (data.cibilDocument) {
+                                        $("#partnercibildocument").html(
+                                            '<a href="' + baseUrl + '/document/download/' + data.cibilDocument.id + '" target="_blank"><i class="icon ion-folder"></i></a>'
+                                        );
+                                    }
+                                    $("#partnerhighmarkscore").html(data.highmarkScore);
+                                    $("#partnerhighmarkcomments").html(data.highmarkComments);
+                                    if (data.highmarkDocument) {
+                                        $("#partnerhighmarkdocument").html(
+                                            '<a href="' + baseUrl + '/document/download/' + data.highmarkDocument.id + '" target="_blank"><i class="icon ion-folder"></i></a>'
+                                        );
+                                    }
+                                    if (data.highmarkRiskCategory) {
+                                        $("#partnerhighmarkriskcategory").html(data.highmarkRiskCategory.name);
+                                    }
+                                    $("#partnerpannumber").html(data.panNumber);
+                                    $("#partneraadharnumber").html(data.aadharNumber);
+                                    $("#partneractive").html(data.active);
+                                }
+                                $('#partnermodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

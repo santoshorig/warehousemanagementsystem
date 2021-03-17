@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.inward.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.inward.trucks}">
+                        Trucks</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.inward.inwardtype}">Inward
+                                    Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        data-width="100%" th:field="*{inward.inwardType}">
+                                    <option th:each="inwardType: ${inwardTypes}"
+                                            th:text="${inwardType.value}"
+                                            th:value="${inwardType.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" data-width="100%"
+                                        th:field="*{inward.businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.contract}">Contract: </label>
+                                <select class="form-control select2-show-search"
+                                        data-width="100%" th:field="*{inward.contract}">
+                                    <option th:each="contract: ${contracts}"
+                                            th:text="${contract.friendlyName}"
+                                            th:value="${contract.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-6 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.caddate}">CAD Date: </label><span
+                                    class="tx-danger">&nbsp;*</span><small class="cadwarning tx-danger tx-bold hide"
+                                                                           th:text="#{admin.form.inward.caddate.warning}"></small>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{inward.cadDate}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.inward.caddate}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.cadnumber}">CAD Number: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{inward.warehouseCad}">
+                                </select>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.cddnumber}">CDD Number: </label><span
+                                    class="tx-danger" id="cddnumbermandatorylabel">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-remotecddvalidation="2" data-parsley-trigger="focusout"
+                                       required=""
+                                       th:data-parsley-remote-message="#{error.code.cdd}"
+                                       th:field="*{inward.cddNumber}"
+                                       th:placeholder="#{admin.form.inward.cddnumber}" type="text">
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.cdddate}">CDD Date: </label><span
+                                    class="tx-danger" id="cdddatemandatorylabel">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change" required=""
+                                           th:field="*{inward.cddDate}"
+                                           th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.inward.cdddate}"
+                                           type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.inward.caddocument}">CAD Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.inward.getCadDocument() == null}">&nbsp;*</span>
+                            <small th:if="${model.inward.getCadDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.inward.getCadDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.inward.getCadDocument() == null} ? 'required'"
+                                       th:field="*{cadDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.inward.caddocument}">CAD Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.inward.cdddocument}">CDD Document: </span>
+                            <span class="tx-danger"
+                                  id="cdddocumentmandatorylabel" th:if="${model.inward.getCddDocument() == null}">&nbsp;*</span>
+                            <small th:if="${model.inward.getCddDocument() != null}">
+                                <a class="tx-indigo" id="cdddocumentexistinglink"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.inward.getCddDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.inward.getCddDocument() == null} ? 'required'"
+                                       th:field="*{cddDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.inward.cdddocument}">CDD Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.inward.grndocument}">GRN Document: </span>
+                            <small th:if="${model.inward.getGrnDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.inward.getGrnDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:field="*{grnDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.inward.grndocument}">GRN Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{inward.id}" th:value="*{inward.id}" type="hidden"/>
+                        <input class="form-control" th:field="*{inward.status}" th:value="*{inward.status}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{inward.upload}" th:value="*{inward.upload}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('#inward\\.inwardType').on('change', function () {
+                    var inwardType = this.value;
+                    $('#modelForm').parsley().destroy();
+                    if (inwardType != 'Made-Up Bag') {
+                        $('#inward\\.cddNumber').attr('data-parsley-required', 'true');
+                        $("#cddnumbermandatorylabel").show();
+                        $('#inward\\.cddNumber').attr("required", true);
+                        $('#inward\\.cddDate').attr('data-parsley-required', 'true');
+                        $("#cdddatemandatorylabel").show();
+                        $('#inward\\.cddDate').attr("required", true);
+                        var cdddocumentneeded = $("#cdddocumentexistinglink").length ? false : true;
+                        $('#cddDocument').attr('data-parsley-required', cdddocumentneeded);
+                        $("#cdddocumentmandatorylabel").show();
+                        $('#cddDocument').attr("required", cdddocumentneeded);
+                    } else {
+                        $('#inward\\.cddNumber').attr('data-parsley-required', 'false');
+                        $("#cddnumbermandatorylabel").hide();
+                        $('#inward\\.cddNumber').removeAttr('required');
+                        $('#inward\\.cddDate').attr('data-parsley-required', 'false');
+                        $("#cdddatemandatorylabel").hide();
+                        $('#inward\\.cddDate').removeAttr('required');
+                        $('#cddDocument').attr('data-parsley-required', 'false');
+                        $("#cdddocumentmandatorylabel").hide();
+                        $('#cddDocument').removeAttr('required');
+                    }
+                    $('#modelForm').parsley();
+                }).change();
+
+                $('#inward\\.contract').on('change', function () {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var contract = this.value;
+                    $.ajax({
+                        url: baseUrl + '/contract/getCadByContract/' + contract,
+                        type: "GET",
+                        contentType: 'application/json',
+                        beforeSend: function () {
+                            $("#inward\\.warehouseCad").empty();
+                        },
+                        success: function (data) {
+                            var options = '';
+                            if (data.length > 0) {
+                                $(data).each(function (index) {
+                                    options += '<option value="' + data[index].id + '">' +
+                                        data[index].bookNumber + '-' + data[index].serialNumber + '</option>';
+                                });
+                            }
+                            $('#inward\\.warehouseCad').append(options);
+                            $('#inward\\.warehouseCad').trigger("chosen:updated");
+                            $('#inward\\.warehouseCad').trigger("liszt:updated");
+                        }
+                    });
+                    $.ajax({
+                        url: baseUrl + '/contract/getContract/' + contract,
+                        type: "GET",
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data) {
+                                $('#modelForm').parsley().destroy();
+                                var contractDate = data.contractDate;
+                                var contractDateSplit = contractDate.split('T');
+                                if (contractDateSplit.length) {
+                                    $("#inward\\.cadDate").prop('min', contractDateSplit[0]);
+                                    $('#modelForm').parsley();
+                                }
+                            }
+                        }
+                    });
+                }).change();
+
+                $('#inward\\.cadDate').on('change', function () {
+                    var cadDate = new Date($(this).val());
+                    var now = new Date();
+                    var diffDate = (cadDate - now) / (1000 * 60 * 60 * 24);
+                    var days = Math.round(diffDate);
+                    if (days >= 7) {
+                        $(".cadwarning").show();
+                    } else {
+                        $(".cadwarning").hide();
+                    }
+                });
+
+                window.Parsley.addValidator('remotecddvalidation', {
+                    validateString: function (value) {
+                        if (value.length < 2) {
+                            return false
+                        }
+                        var getUrl = window.location;
+                        var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                        var contract = $('#inward\\.contract').val();
+                        var cdd = value;
+                        var url = '/inward/check-cdd/' + cdd + '/' + contract;
+                        var valid = false;
+                        $.ajax({
+                            url: baseUrl + url,
+                            type: "GET",
+                            contentType: 'application/json',
+                            async: false,
+                            success: function (data) {
+                                valid = data;
+                            }
+                        });
+                        return valid;
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

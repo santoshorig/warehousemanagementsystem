@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="alert alert-danger mg-b-20" role="alert" th:fragment="alerts" th:if="${#fields.hasErrors('*')}">
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <ul>
+        <li th:class="${e.global}? globalerr : fielderr" th:each="e : ${#fields.detailedErrors()}">
+            <span><strong th:text="${e.global}? '*' : ${e.fieldName}">The field name</strong></span> |
+            <span th:text="${e.message}">The error message</span>
+        </li>
+    </ul>
+</div><!-- alert -->
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminlogin::adminlogin" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="signin-wrapper" th:fragment="content">
+
+    <div class="signin-box">
+        <h2 class="slim-logo"><a href="javascript:" th:text="#{login.form.header}">Logo Text</a></h2>
+        <h2 class="signin-title-primary" th:text="#{login.form.title}">Welcome Text</h2>
+        <h3 class="signin-title-secondary" th:text="#{login.form.message}">Sign In Text</h3>
+        <div class="alert alert-danger mg-b-20" role="alert" th:if="${error}">
+            <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong th:text="#{login.form.error}"></strong>.
+        </div>
+        <form data-parsley-validate="" method="POST" th:action="@{/login}">
+            <div class="form-group">
+                <input class="form-control" data-parsley-trigger="change" id="email" name="email" required=""
+                       th:placeholder="#{login.form.email}" type="email">
+            </div><!-- form-group -->
+            <div class="form-group mg-b-50">
+                <input class="form-control" id="password" name="password" required=""
+                       th:placeholder="#{login.form.password}" type="password">
+            </div><!-- form-group -->
+            <button class="btn btn-primary btn-block btn-signin" th:text="#{login.form.signin}">Sign In</button>
+        </form>
+    </div><!-- signin-box -->
+
+</div><!-- signin-wrapper -->
+
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/review-approval-save'}"
+                      th:object="${outwardRemarkForm}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + model.outward.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + model.outward.id}"
+                                           th:href="${'#collapse' + model.outward.id}"
+                                           th:text="${model.outward.friendlyName}">
+                                            Outward
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + model.outward.id}"
+                                         th:id="${'collapse' + model.outward.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th th:text="#{admin.table.property}">Property</th>
+                                                                <th th:text="#{admin.table.value}">Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.outwarddate}">
+                                                                    Outward Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(model.outward.outwardDate, 'dd-MMM-yyyy')}">
+                                                                    Name
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.cdfnumber}">
+                                                                    CDF Number
+                                                                </td>
+                                                                <td th:text="${model.outward.cdfNumber}">
+                                                                    CDF Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.status}">
+                                                                    Status
+                                                                </td>
+                                                                <td th:text="${model.outward.status}">Status</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.businesstype}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.outward.businessType.name}">
+                                                                    Business
+                                                                    Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.do}">
+                                                                    DO
+                                                                </td>
+                                                                <td th:text="${model.outward.doModel.friendlyName}">
+                                                                    DO
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.totalbags}">
+                                                                    Total Bags
+                                                                </td>
+                                                                <td th:text="${model.totalBags}">
+                                                                    Total Bags
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.totalnetweight}">
+                                                                    Total Net Weight
+                                                                </td>
+                                                                <td th:text="${#numbers.formatDecimal(model.totalWeight, 0, 'COMMA', 3, 'POINT')}">
+                                                                    Total Net Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outward.madeupbags}">
+                                                                    Made Up Bags
+                                                                </td>
+                                                                <td th:text="${model.totalMadeUpBags}">
+                                                                    Total Bags
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${model.outward.cdfDocument != null}">
+                                                                <td th:text="#{admin.table.outward.cdfdocument}">
+                                                                    CDF Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${model.outward.cdfDocument.getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion4"
+                                 role="tablist">
+                                <div class="card" th:each="outwardTruck :${model.outwardTruckList}">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'headingtruck' + outwardTruck.outwardTruck.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion4"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapsetruck' + outwardTruck.outwardTruck.id}"
+                                           th:href="${'#collapsetruck' + outwardTruck.outwardTruck.id}"
+                                           th:text="${outwardTruck.outwardTruck.friendlyName}">
+                                            Outward Truck
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'headingtruck' + outwardTruck.outwardTruck.id}"
+                                         th:id="${'collapsetruck' + outwardTruck.outwardTruck.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th th:text="#{admin.table.property}">Property</th>
+                                                                <th th:text="#{admin.table.value}">Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.vehiclenumber}">
+                                                                    Vehicle Number
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.vehicleNumber}">
+                                                                    Vehicle Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.loadingdate}">
+                                                                    Loading Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(outwardTruck.outwardTruck.loadingDate, 'dd-MMM-yyyy')}">
+                                                                    Dumping Date
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.totalbagsbalesdrums}">
+                                                                    Total Bags/Bales/Drums
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.totalBagsBalesDrums}">
+                                                                    Total Bags/Bales/Drums
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.grossweight}">
+                                                                    Gross Weight
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.grossWeight}">
+                                                                    Gross Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.tareweight}">
+                                                                    Tare Weight
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.tareWeight}">
+                                                                    Tare Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.getGatePassDocument() != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.gatepassdocument}">
+                                                                    Gate Pass Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${outwardTruck.outwardTruck.getGatePassDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.getWeighmentDocument() != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.weighmentdocument}">
+                                                                    Weighment Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${outwardTruck.outwardTruck.getWeighmentDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.getQualityCheckDocument() != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.qualitycheckdocument}">
+                                                                    Quality Check Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${outwardTruck.outwardTruck.getQualityCheckDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.getWeighbridge() != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.weighbridge}">
+                                                                    Weighbridge
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.weighbridge.name}">
+                                                                    Weighbridge
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.getQualityLab() != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.qualitylab}">
+                                                                    Quality Lab
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.qualityLab.name}">
+                                                                    Quality Lab
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${outwardTruck.outwardTruck.employee != null}">
+                                                                <td th:text="#{admin.table.outwardtruck.assayer}">
+                                                                    Assayer
+                                                                </td>
+                                                                <td th:text="${outwardTruck.outwardTruck.employee.name}">
+                                                                    Assayer
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.outwardtruck.qc}">
+                                                                    QC
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="outwardQC: ${outwardTruck.getQCGrouped()}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.outwardtruck.qcparameter}">QC Parameter</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${outwardQC.key}">QC Parameter</span>
+                                                                                <span class="ml-5 text-muted"
+                                                                                      th:text="#{admin.table.outwardtruck.qcvalue}">QC Value</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${outwardQC.value}">Test Result</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.outwardremark.stacknonfull}">Stack Non Full: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{warehouseStackList}" multiple>
+                                    <option th:each="warehouseStack: ${warehouseStacks}"
+                                            th:text="${warehouseStack.friendlyName}"
+                                            th:value="${warehouseStack.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-outward="${model.outward.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.outward.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.outward.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{status}">
+                                    <option th:each="status: ${statuses}"
+                                            th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{outward}"
+                               th:value="*{outward}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var outward = $(this).data("outward");
+                    if (outward) {
+                        $.ajax({
+                            url: baseUrl + '/outward-remark/getByOutward/' + outward,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

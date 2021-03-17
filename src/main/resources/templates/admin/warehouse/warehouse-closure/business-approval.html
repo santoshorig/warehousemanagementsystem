@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/business-approval-save'}"
+                      th:object="${warehouseClosureRemarkForm}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + model.warehouse.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + model.warehouse.id}"
+                                           th:href="${'#collapse' + model.warehouse.id}"
+                                           th:text="${model.warehouse.name}">
+                                            Warehouse Name
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + model.warehouse.id}"
+                                         th:id="${'collapse' + model.warehouse.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th th:text="#{admin.table.property}">Property</th>
+                                                                <th th:text="#{admin.table.value}">Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.code}">
+                                                                    Code
+                                                                </td>
+                                                                <td th:text="${model.warehouse.code}">Code</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.name}">
+                                                                    Name
+                                                                </td>
+                                                                <td th:text="${model.warehouse.name}">Name</td>
+                                                            </tr>
+                                                            <tr>
+
+                                                                <td th:text="#{admin.table.warehouse.warehousetype}">
+                                                                    Warehouse Type
+                                                                </td>
+                                                                <td th:text="${model.warehouse.warehouseType.name}">
+                                                                    Warehouse
+                                                                    Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.takeover}">
+                                                                    Takeover Type
+                                                                </td>
+                                                                <td th:text="${model.warehouse.takeoverType.name}">
+                                                                    Takeover
+                                                                    Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.businesstype}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.warehouse.businessType.name}">
+                                                                    Business
+                                                                    Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.address}">
+                                                                    Address
+                                                                </td>
+                                                                <td th:text="${model.fullAddress}">Address</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.inspectionby}">
+                                                                    Inspection By
+                                                                </td>
+                                                                <td th:text="${model.warehouse.inspectionBy.nameAndCode}">
+                                                                    Inspection By
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.commodity}">
+                                                                    Commodity
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="commodity: ${model.commodityList}">
+                                                                            <p class="mg-b-0">
+                                                                        <span class="text-muted"
+                                                                              th:text="${commodity.commodity.friendlyName}">Commodity</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.owner}">
+                                                                    Owner
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="owner: ${model.warehouseOwnerList}">
+                                                                            <p class="mg-b-0">
+                                                                        <span class="text-muted"
+                                                                              th:text="${owner.friendlyDetails}">Owner</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.constructionyear}">
+                                                                    Construction Year
+                                                                </td>
+                                                                <td th:text="${#dates.format(model.warehouseDetail.constructionYear, 'yyyy')}">
+                                                                    Construction Year
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.license}">
+                                                                    License
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.licenseNumber}">
+                                                                    License Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.fssailicense}">
+                                                                    FSSAI License
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.fssaiLicenseNumber}">
+                                                                    FSSAI License
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.agreementtype}">
+                                                                    Agreement Type
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.agreementType}">
+                                                                    Agreement Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.dimensions}">
+                                                                    Dimensions
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.friendlyDimensions}">
+                                                                    Friendly Dimensions
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.locationtype}">
+                                                                    Location Type
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.locationType}">
+                                                                    Location Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.functionalfactory}">
+                                                                    Functional Factory
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.functionalFactory} ? #{admin.grid.bool.true} : #{admin.grid.bool.false}">
+                                                                    Functional Factory
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.closedfor}">
+                                                                    Closed For (Months)
+                                                                </td>
+                                                                <td th:text="${model.warehouseDetail.closedMonths}">
+                                                                    Closed For (Months)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.closuredate}">
+                                                                    Closure Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(warehouseClosureRemarkForm.warehouseClosure.closureDate, 'dd-MMM-yyyy')}">
+                                                                    Closure Date
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.warehouse.documents}">
+                                                                    Documents
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="warehouseDocument: ${model.warehouseDocumentList}">
+                                                                            <p class="mg-b-0">
+                                                                        <span class="text-muted"
+                                                                              th:text="${warehouseDocument.documentType.name}">Document Type</span>
+                                                                                <a target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${warehouseDocument.document.id}}"><i
+                                                                                        class="icon ion-folder"></i></a>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item"
+                                                                            th:if="${model.warehouse.termSheetDocument != null}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.warehouse.manualtermsheet}">Manual Term Sheet</span>
+                                                                                <a target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${model.warehouse.termSheetDocument.id}}"><i
+                                                                                        class="icon ion-folder"></i></a>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.warehouse.dehireletter}">Dehire Letter</span>
+                                                                                <a target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${warehouseClosureRemarkForm.warehouseClosure.dehireLetter.id}}"><i
+                                                                                        class="icon ion-folder"></i></a>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseclosure.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);"
+                                       th:data-warehouse-closure="${warehouseClosureRemarkForm.warehouseClosure.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.warehouseclosure.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.warehouseclosure.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{status}">
+                                    <option th:each="status: ${statuses}"
+                                            th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{warehouseClosure}"
+                               th:value="*{warehouseClosure}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var warehouseClosure = $(this).data("warehouse-closure");
+                    if (warehouseClosure) {
+                        $.ajax({
+                            url: baseUrl + '/warehouse-closure-remark/getByWarehouseClosure/' + warehouseClosure,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

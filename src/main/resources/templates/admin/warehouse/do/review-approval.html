@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/review-approval-save'}"
+                      th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + model.doModel.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + model.doModel.id}"
+                                           th:href="${'#collapse' + model.doModel.id}"
+                                           th:text="${model.doModel.doNumber}">
+                                            DO Number
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + model.doModel.id}"
+                                         th:id="${'collapse' + model.doModel.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.businesstype}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.doModel.businessType.name}">
+                                                                    Business Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.number}">
+                                                                    DO Number
+                                                                </td>
+                                                                <td th:text="${doDomain.doModel.doNumber}">DO Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.date}">
+                                                                    DO Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(doDomain.doModel.doDate,'dd-MMM-yyyy')}">
+                                                                    DO Date
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.expectedweight}">
+                                                                    DO Expected Weight
+                                                                </td>
+                                                                <td th:text="${doDomain.doModel.doWeight}">
+                                                                    DO Expected Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.actualweight}">
+                                                                    DO Actual Weight
+                                                                </td>
+                                                                <td th:text="${doDomain.totalWeight}">
+                                                                    DO Actual Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.bagdetails}">
+                                                                    Bag Details
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="bagType: ${doDomain.bagTypeTotals}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-danger"
+                                                                                      th:text="${bagType.key.friendlyName}">Bag Type</span>
+                                                                                <span class="text-danger"
+                                                                                      th:text="${bagType.value}">Total Bags</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.do.documents}">
+                                                                    Documents
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:if="${model.doModel.doLetterDocument != null}">
+                                                                            <p class="mg-b-0">
+                                                                                <a class="tx-indigo"
+                                                                                   target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${model.doModel.doLetterDocument.getId()}}"
+                                                                                   th:text="#{admin.table.do.letterdocument}"
+                                                                                   th:title="#{admin.table.do.letterdocument}">Letter
+                                                                                    Document
+                                                                                </a>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item"
+                                                                            th:if="${model.doModel.doEmailDocument != null}">
+                                                                            <p class="mg-b-0">
+                                                                                <a class="tx-indigo"
+                                                                                   target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${model.doModel.doEmailDocument.getId()}}"
+                                                                                   th:text="#{admin.table.do.emaildocument}"
+                                                                                   th:title="#{admin.table.do.emaildocument}">
+                                                                                    Email Document
+                                                                                </a>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item"
+                                                                            th:if="${model.doModel.doKycDocument != null}">
+                                                                            <p class="mg-b-0">
+                                                                                <a class="tx-indigo"
+                                                                                   target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${model.doModel.doKycDocument.getId()}}"
+                                                                                   th:text="#{admin.table.do.kycdocument}"
+                                                                                   th:title="#{admin.table.do.kycdocument}">
+                                                                                    KYC  Document
+                                                                                </a>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.do.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-do="${model.doModel.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.do.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.do.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{status}">
+                                    <option th:each="status: ${statuses}"
+                                            th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{doModel}"
+                               th:value="*{doModel}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var do
+                    = $(this).data("do");
+                    if (do) {
+                        $.ajax({
+                            url: baseUrl + '/do-remark/getBydo/' + do,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.registration}">
+                        Registration</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.commodity}">
+                        Commodity</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.owner}">
+                        Owner</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.basic}">Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.weighbridge}">Weighbridge</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.manpower}">
+                        Manpower</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.asset}">
+                        Asset</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.consumable}">
+                        Consumable</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.stack}">
+                        Stack</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.cad}">
+                        CAD</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.documents}">
+                        Documents</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.inspection}">
+                        Inspection</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouse.warehousetype}">Warehouse Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{warehouseType}">
+                                    <option th:each="warehouseType: ${warehouseTypes}" th:text="${warehouseType.name}"
+                                            th:value="${warehouseType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouse.takeovertype}">Takeover Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{takeoverType}">
+                                    <option th:each="takeoverType: ${takeoverTypes}" th:text="${takeoverType.name}"
+                                            th:value="${takeoverType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouse.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.code}">Code: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{code}"
+                                       th:placeholder="#{admin.form.code}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.name}">Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{name}"
+                                       th:placeholder="#{admin.form.name}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.addressline1}">Address Line
+                                    1: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{addressLine1}"
+                                       th:placeholder="#{admin.form.addressline1}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.addressline2}">Address Line
+                                    2: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{addressLine2}" th:placeholder="#{admin.form.addressline2}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.addressline3}">Address Line
+                                    3: </label></span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{addressLine3}" th:placeholder="#{admin.form.addressline3}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehouse.regionlocation}">Region/Location: </label></span>
+                                <select class="form-control select2-show-search" th:field="*{regLoc}">
+                                    <option th:each="regionLocation: ${regionLocations}"
+                                            th:text="${regionLocation.friendlyName}"
+                                            th:value="${regionLocation.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contactpersonname}">Contact
+                                    Person Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{contactPersonName}"
+                                       th:placeholder="#{admin.form.contactpersonname}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contactpersonmobile}">Contact
+                                    Person Mobile: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-pattern="^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{contactPersonMobile}"
+                                       th:placeholder="#{admin.form.contactpersonmobile}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouse.letterreferencenumber}">Letter Reference
+                                    Number: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{letterReferenceNumber}"
+                                       th:placeholder="#{admin.form.warehouse.letterreferencenumber}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehouse.letterreferencedate}">Letter
+                                    Reference Date: </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change"
+                                           th:field="*{letterReferenceDate}"
+                                           th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.warehouse.letterreferencedate}"
+                                           type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehouse.inspectionby}">Inspection
+                                    By: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{inspectionBy}">
+                                    <option th:each="employee: ${employees}" th:text="${employee.name}"
+                                            th:value="${employee.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouse.tender}">Tender: </label><span
+                                    class="tx-danger" th:if="${isGovernment}">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:attrappend="required=${isGovernment} ? 'required'"
+                                        th:field="*{tender}">
+                                    <option th:if="${!isGovernment}" th:text="#{admin.form.option.none}" value="">None
+                                    </option>
+                                    <option th:each="tender: ${tenders}" th:text="${tender.name}"
+                                            th:value="${tender.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.warehouse.erpcode}">ERP
+                                    Code: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="0"
+                                       data-parsley-trigger="change"
+                                       th:field="*{erpCode}" th:placeholder="#{admin.form.warehouse.erpcode}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <input class="form-control" th:field="*{status}" th:value="*{status}" type="hidden"/>
+                        <input class="form-control" th:field="*{active}" th:value="*{active}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

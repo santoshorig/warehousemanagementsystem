@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:include="layouts/admintable::admintable"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div th:replace="fragments/messages::messages"></div>
+            <div class="table-wrapper">
+                <table class="table table-bordered display responsive nowrap" id="datatable1"
+                       th:if="${!models.isEmpty()}">
+                    <thead class="thead-colored bg-info">
+                    <tr>
+                        <th class="wd-5p" th:text="#{admin.grid.id}">Id</th>
+                        <th class="wd-15p" th:text="#{admin.grid.name}">Name</th>
+                        <th class="wd-15p" th:text="#{admin.grid.location}">Location</th>
+                        <th th:text="#{admin.grid.actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="model :${models}">
+                        <td th:text="${model.id}"></td>
+                        <td th:text="${model.name}"></td>
+                        <td th:text="${model.location.friendlyName}"></td>
+                        <td>
+                            <a class="btn btn-success btn-icon"
+                               th:href="@{'/admin/'+${controller}+'/edit/'+${model.id}}"
+                               th:title="#{admin.grid.edit}">
+                                <div><i class="icon ion-edit"></i></div>
+                            </a>
+                            <a class="btn btn-danger btn-icon"
+                               onclick="return confirm('Are you sure you want to delete this record?');"
+                               th:href="@{'/admin/'+${controller}+'/delete/'+${model.id}}"
+                               th:title="#{admin.grid.delete}">
+                                <div><i class="icon ion-close"></i></div>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

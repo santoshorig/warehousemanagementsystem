@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-footer" th:fragment="footer">
+    <div class="container">
+        <p>
+            &copy;<span th:text="#{admin.footer.origo}"> Copyright - Origo Commodities India Pvt. Ltd</span>
+            <span th:text="${#dates.year(#dates.createNow())}">2019</span>
+            <span th:text="#{admin.footer.copyright}">&nbsp;| All Rights Reserved.</span>
+            <span class="tx-primary" th:text="#{admin.footer.sessiontime}">Session time</span><span class="tx-primary"
+                                                                                                    th:text="${sessionTime}"/>
+        </p>
+        <p><span th:text="#{admin.footer.developedby}">Developed by:</span> <a href="http://www.kamadhenu.co.in/"
+                                                                               th:text="#{admin.footer.kamadhenu}">KAMADHENU</a>
+        </p>
+    </div><!-- container -->
+</div><!-- slim-footer -->
+
+</html>

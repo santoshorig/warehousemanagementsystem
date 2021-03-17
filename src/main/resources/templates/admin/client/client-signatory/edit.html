@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client/edit/'+${model.getClientSignatory().getClient().getId()}}"
+                                            th:text="#{admin.menu.client.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-partner/index/'+${model.getClientSignatory().getClient().getId()}}"
+                                            th:text="${model.clientSignatory.client.clientConstitution.partnershipLabel}">
+                        Partners</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-address/edit/client/'+${model.getClientSignatory().getClient().getId()}}"
+                                            th:text="#{admin.menu.client.address}">Address</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client-bank/edit/client/'+${model.getClientSignatory().getClient().getId()}}"
+                                            th:text="#{admin.menu.client.bankaccounts}">
+                        Bank Accounts</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+
+                                            th:text="#{admin.menu.client.signatories}">Signatories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.documents}">Documents</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.clientSignatory.client.friendlyName}">Client Friendly
+                Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientsignatory.title}">Title: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{clientSignatory.title}">
+                                    <option th:each="title: ${titles}" th:text="${title}"
+                                            th:value="${title}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.firstname}">First
+                                    Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{clientSignatory.firstName}"
+                                       th:placeholder="#{admin.form.clientsignatory.firstname}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.middlename}">Middle
+                                    Name: </label>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:field="*{clientSignatory.middleName}"
+                                       th:placeholder="#{admin.form.clientsignatory.middlename}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.lastname}">Last
+                                    Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{clientSignatory.lastName}"
+                                       th:placeholder="#{admin.form.clientsignatory.lastname}" type="text">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.designation}">Designation: </label>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       th:field="*{clientSignatory.designation}"
+                                       th:placeholder="#{admin.form.clientsignatory.designation}" type="text">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientsignatory.mobilenumber}">Mobile Phone: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-pattern="^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{clientSignatory.mobileNumber}"
+                                       th:placeholder="#{admin.form.clientsignatory.mobilenumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientsignatory.modeofoperation}">Mode Of
+                                    Operation: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{clientSignatory.clientModeOfOperation}">
+                                    <option th:each="clientModeOfOperation: ${clientModeOfOperations}"
+                                            th:text="${clientModeOfOperation.name}"
+                                            th:value="${clientModeOfOperation.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4 jointlywith">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.jointlywith}">Jointly
+                                    With: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{clientSignatory.jointlyWith}">
+                                    <option th:text="#{admin.form.option.none}" value="">None</option>
+                                    <option th:each="clientSignatory: ${clientSignatories}"
+                                            th:text="${clientSignatory.name}"
+                                            th:value="${clientSignatory.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.validfrom}">Valid
+                                    From: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change" id="validFrom"
+                                       required=""
+                                       th:attr="min=${model.clientSignatory.validFrom != null ? #dates.format(model.clientSignatory.validFrom, 'YYYY-MM-dd') :
+                                       #dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:field="*{clientSignatory.validFrom}"
+                                       th:placeholder="#{admin.form.clientsignatory.validfrom}" type="date">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientsignatory.validto}">Valid
+                                    To: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change" id="validTo"
+                                       required=""
+                                       th:attr="min=${model.clientSignatory.validFrom != null ? #dates.format(model.clientSignatory.validFrom, 'YYYY-MM-dd') :
+                                       #dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:field="*{clientSignatory.validTo}"
+                                       th:placeholder="#{admin.form.clientsignatory.validto}" type="date">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientsignatory.signaturedocumenttype}">Signature Document
+                                    Type: </label><span
+                                    class="tx-danger" id="signaturedocumenttypelabel"
+                                    th:if="${!isGovernment}">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{clientSignatory.signatureDocumentType}">
+                                    <option th:text="#{admin.form.option.none}" value="">None</option>
+                                    <option th:data-mandatory="${documentType.mandatory}"
+                                            th:each="documentType: ${documentTypes}"
+                                            th:text="${documentType.getName()}"
+                                            th:value="${documentType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientsignatory.signaturedocumentnumber}">Signature
+                                    Document Number: </label><span
+                                    class="tx-danger" id="signaturedocumentnumberlabel"
+                                    th:if="${!isGovernment}">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:field="*{clientSignatory.signatureDocumentNumber}"
+                                       th:placeholder="#{admin.form.clientsignatory.signaturedocumentnumber}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.clientsignatory.signatureproof}">Signature Proof: </span><span
+                                class="tx-danger" id="signatorydocumentmandatorylabel"
+                                th:if="${!isGovernment}">&nbsp;*</span>
+                            <small th:if="${model.getClientSignatory().getSignatureDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.getClientSignatory().getSignatureDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       id="signaturedocumentupload"
+                                       th:field="*{upload}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.clientsignatory.signatureproof}">Signature Proof: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{clientSignatory.id}"
+                               th:value="*{clientSignatory.id}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{clientSignatory.client}"
+                               th:value="*{clientSignatory.client}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{clientSignatory.signatureDocument}"
+                               th:value="*{clientSignatory.signatureDocument}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                var documentUploaded = /*[[${model.getClientSignatory().getSignatureDocument() != null}]]*/ 'default';
+                var isGovernment = /*[[${isGovernment}]]*/ 'default';
+
+                $('#clientSignatory\\.clientModeOfOperation').on('change', function () {
+                    var value = $('#clientSignatory\\.clientModeOfOperation option:selected').text();
+                    if (value.toLowerCase() == "jointly") {
+                        $(".jointlywith").show();
+                        $('#clientSignatory_jointlyWith_chosen').attr('style', 'width: 100%');
+                    } else {
+                        $(".jointlywith").hide();
+                    }
+                }).change();
+                $('#validFrom').change(function () {
+                    var date = $("#validFrom").val();
+                    $("#validTo").prop('min', date);
+                    $("#validTo").val(date);
+
+                });
+                $('#clientSignatory\\.signatureDocumentType').on('change', function () {
+                    if (isGovernment) {
+                        $('#clientSignatory\\.signatureDocumentType').attr('data-parsley-required', 'false');
+                        $("#signaturedocumenttypelabel").hide();
+                        $('#clientSignatory\\.signatureDocumentNumber').attr('data-parsley-required', 'false');
+                        $("#signaturedocumentnumberlabel").hide();
+                        $('#signaturedocumentupload').attr('data-parsley-required', 'false');
+                        $("#signatorydocumentmandatorylabel").hide();
+                    } else {
+                        $('#clientSignatory\\.signatureDocumentType').attr('data-parsley-required', 'true');
+                        $("#signaturedocumenttypelabel").show();
+                        $('#clientSignatory\\.signatureDocumentNumber').attr('data-parsley-required', 'true');
+                        $("#signaturedocumentnumberlabel").show();
+                        var mandatory = $(this).find(':selected').data('mandatory');
+                        if (!mandatory || documentUploaded) {
+                            $('#signaturedocumentupload').attr('data-parsley-required', 'false');
+                            $("#signatorydocumentmandatorylabel").hide();
+                        } else {
+                            $('#signaturedocumentupload').attr('data-parsley-required', 'true');
+                            $("#signatorydocumentmandatorylabel").show();
+                        }
+                    }
+                    $('#modelForm').parsley();
+                }).change();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

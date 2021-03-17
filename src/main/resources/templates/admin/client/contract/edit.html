@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.contract.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.contract.services}">Services</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.contract.insurance}">Insurance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.contract.acceptancelimit}">Acceptance
+                        Limit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.contract.documents}">Documents</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" id="modelForm"
+                      method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.client}">Client: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{client}">
+                                    <option th:each="client: ${clients}"
+                                            th:text="${client.friendlyName}"
+                                            th:value="${client.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.warehouse}">Warehouse: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{warehouse}">
+                                    <option th:each="warehouse: ${warehouses}"
+                                            th:text="${warehouse.friendlyName}"
+                                            th:value="${warehouse.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.commodity}">Commodity: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:attrappend="required=${model.id == null or model.commodity.isEmpty()} ? 'required'"
+                                        th:field="*{commodity}">
+                                    <option th:each="commodity: ${commodities}" th:text="${commodity.name}"
+                                            th:value="${commodity.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.contract_date}">Tender
+                                    Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change" required=""
+                                           th:field="*{contractDate}"
+                                           th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.contract.contract_date}" type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.name}">Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{name}"
+                                          th:placeholder="#{admin.form.name}"></textarea>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.effective_from}">Effective
+                                    From: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change" required=""
+                                           th:field="*{effectiveFrom}"
+                                           th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.contract.effective_from}" type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.effective_to}">Effective
+                                    To: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change" required=""
+                                           th:field="*{effectiveTo}"
+                                           th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.contract.effective_to}" type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.storagecharge}">Storage Charge: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-pattern="^((\d+)((\.\d{1,3})?))$"
+                                       data-parsley-trigger="change" data-parsley-type="number"
+                                       min="0" required=""
+                                       th:field="*{storageCharge}"
+                                       th:placeholder="#{admin.form.contract.storagecharge}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.storagechargebasis}">Storage Charge
+                                    Basis: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{storageChargeBasis}">
+                                    <option th:each="scb: ${storageChargeBasis}"
+                                            th:text="${scb}"
+                                            th:value="${scb}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockin}">Lock In: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{lockIn}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockinquantity}">Lock In Quantity: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="number"
+                                       min="0" th:field="*{lockInQuantity}"
+                                       th:placeholder="#{admin.form.contract.lockinquantity}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.lockinunit}">Lock In Unit: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{lockInUnit}">
+                                    <option th:each="lockInUnit: ${lockInUnits}"
+                                            th:text="${lockInUnit}"
+                                            th:value="${lockInUnit}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.lockinenddate}">Lock In
+                                    End Date: </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change"
+                                           th:attr="min=${model.lockInEndDate != null ? #dates.format(model.lockInEndDate, 'YYYY-MM-dd') :
+                                           #dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:field="*{lockInEndDate}"
+                                           th:placeholder="#{admin.form.contract.lockinenddate}" type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.postlockinbilling}">Post
+                                    Lock In Billing: </label>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       data-parsley-type="number"
+                                       min="0" th:field="*{postLockInBillingCharge}"
+                                       th:placeholder="#{admin.form.contract.postlockinbilling}"
+                                       type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.billingpeakstock}">Billing Peak Stock: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{billingPeakStock}">
+                                    <option th:each="billingPeakStock: ${billingPeakStocks}"
+                                            th:text="${billingPeakStock}"
+                                            th:value="${billingPeakStock}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.clientnamesrwr}">Client
+                                    Name For SR/WR: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{clientNameSRWR}"
+                                       th:placeholder="#{admin.form.contract.clientnamesrwr}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.contract.warehousenamesrwr}">Client
+                                    Name For SR/WR: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{warehouseNameSRWR}"
+                                       th:placeholder="#{admin.form.contract.warehousenamesrwr}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.billingtype}">Billing Type: </label>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{billingType}">
+                                    <option th:each="billingType: ${billingTypes}"
+                                            th:text="${billingType.value}"
+                                            th:value="${billingType.key}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.active}">Active: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{active}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.contract.basisoftakeover}">Basis Of Takeover: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{basisOfTakeover}">
+                                    <option th:each="bOT: ${basisOfTakeover}"
+                                            th:text="${bOT.name}"
+                                            th:value="${bOT.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <input class="form-control" th:field="*{status}" th:value="*{status}" type="hidden"/>
+                        <input class="form-control" th:field="*{tender}" th:value="*{tender}" type="hidden"/>
+                        <input class="form-control" th:field="*{lockedInward}" th:value="*{lockedInward}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{lockedSr}" th:value="*{lockedSr}" type="hidden"/>
+                        <input class="form-control" th:field="*{lockedDo}" th:value="*{lockedDo}" type="hidden"/>
+                        <input class="form-control" th:field="*{lockedOutward}" th:value="*{lockedOutward}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('#client').on('change', function () {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var clientCommodities = [];
+                    var warehouseCommodities = [];
+                    var warehouse = $('#warehouse').val();
+                    var client = this.value;
+                    if (client != null && client != "") {
+                        $.ajax({
+                            url: baseUrl + '/client/getById/' + client,
+                            type: "GET",
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.id) {
+                                    var newClientName = data.name;
+                                    var id = $('#id').val();
+                                    if (id == null || id == "") {
+                                        $('#clientNameSRWR').val(newClientName);
+                                    } else {
+                                        /*<![CDATA[*/
+                                        var existingClient = /*[[${model.client}]]*/ 'default';
+                                        /*]]>*/
+                                        if (existingClient) {
+                                            if (data.id != existingClient.id) {
+                                                $('#clientNameSRWR').val(newClientName);
+                                            }
+                                        } else {
+                                            $('#clientNameSRWR').val(newClientName);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        $.ajax({
+                            url: baseUrl + '/client/getCommodityByClient/' + client,
+                            type: "GET",
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        clientCommodities[data[index].commodity.id] = data[index].commodity.name;
+                                    });
+                                }
+                                if (warehouse != null && warehouse != "") {
+                                    $.ajax({
+                                        url: baseUrl + '/warehouse-commodity/getCommodityByWarehouse/' + warehouse,
+                                        type: "GET",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.length > 0) {
+                                                var commoditiesIntersection = [];
+                                                $(data).each(function (index) {
+                                                    var warehouseCommodityId = data[index].commodity.id;
+                                                    if (clientCommodities[warehouseCommodityId] !== undefined) {
+                                                        commoditiesIntersection[data[index].commodity.id] = data[index].commodity.name;
+                                                    }
+                                                });
+                                                var commoditiesOptions = [];
+                                                $.each(commoditiesIntersection, function (index, value) {
+                                                    if (index && value) {
+                                                        commoditiesOptions += '<option value="' + index + '">' + value + '</option>';
+                                                    }
+                                                });
+                                                $("#commodity").empty();
+                                                $('#commodity').append(commoditiesOptions);
+                                                $('#commodity').trigger("chosen:updated");
+                                                $('#commodity').trigger("liszt:updated");
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }).change();
+                $('#warehouse').on('change', function () {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var clientCommodities = [];
+                    var warehouseCommodities = [];
+                    var client = $('#client').val();
+                    var warehouse = this.value;
+                    if (warehouse != null && warehouse != "") {
+                        $.ajax({
+                            url: baseUrl + '/warehouse/getById/' + warehouse,
+                            type: "GET",
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.id) {
+                                    var newWarehhouseName = data.name;
+                                    var id = $('#id').val();
+                                    if (id == null || id == "") {
+                                        $('#warehouseNameSRWR').val(newWarehhouseName);
+                                    } else {
+                                        /*<![CDATA[*/
+                                        var existingWarehouse = /*[[${model.warehouse}]]*/ 'default';
+                                        /*]]>*/
+                                        if (existingWarehouse) {
+                                            if (data.id != existingWarehouse.id) {
+                                                $('#warehouseNameSRWR').val(newWarehhouseName);
+                                            }
+                                        } else {
+                                            $('#clientNameSRWR').val(newWarehhouseName);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        $.ajax({
+                            url: baseUrl + '/warehouse-commodity/getCommodityByWarehouse/' + warehouse,
+                            type: "GET",
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        warehouseCommodities[data[index].commodity.id] = data[index].commodity.name;
+                                    });
+                                }
+                                if (client != null && client != "") {
+                                    $.ajax({
+                                        url: baseUrl + '/client/getCommodityByClient/' + client,
+                                        type: "GET",
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.length > 0) {
+                                                var commoditiesIntersection = [];
+                                                $(data).each(function (index) {
+                                                    var clientCommodityId = data[index].commodity.id;
+                                                    if (warehouseCommodities[clientCommodityId] !== undefined) {
+                                                        commoditiesIntersection[data[index].commodity.id] = data[index].commodity.name;
+                                                    }
+                                                });
+                                                var commoditiesOptions = [];
+                                                $.each(commoditiesIntersection, function (index, value) {
+                                                    if (index && value) {
+                                                        commoditiesOptions += '<option value="' + index + '">' + value + '</option>';
+                                                    }
+                                                });
+                                                $("#commodity").empty();
+                                                $('#commodity').append(commoditiesOptions);
+                                                $('#commodity').trigger("chosen:updated");
+                                                $('#commodity').trigger("liszt:updated");
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }).change();
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+
+</html>

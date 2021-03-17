@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="admintable" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Meta -->
+    <meta name="description" th:content="#{header.title}">
+    <meta name="author" th:content="#{header.author}">
+
+    <title th:text="#{header.title}">Title</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" sizes="16x16" th:href="@{/custom/img/favicon.ico}"/>
+
+    <!-- Vendor css -->
+    <link rel="stylesheet" th:href="@{/slim/lib/font-awesome/css/font-awesome.css}">
+    <link rel="stylesheet" th:href="@{/slim/lib/Ionicons/css/ionicons.css}">
+    <link rel="stylesheet" th:href="@{/slim/lib/datatables/css/jquery.dataTables.css}">
+    <link rel="stylesheet" th:href="@{/slim/lib/jquery.steps/css/jquery.steps.css}">
+
+    <!-- Slim CSS -->
+    <link rel="stylesheet" th:href="@{/slim/css/slim.css}">
+
+    <!-- Custom css -->
+    <link rel="stylesheet" th:href="@{/custom/css/custom.css}">
+
+    <script th:src="@{/slim/lib/jquery/js/jquery.js}"></script>
+
+</head>
+<body>
+
+<div class="slim-header" th:include="fragments/header::header"></div><!-- slim-header -->
+
+<div class="slim-navbar" th:include="fragments/navbar::navbar"></div><!-- slim-navbar -->
+
+<div class="slim-mainpanel" th:include="this::content"></div><!-- slim-mainpanel -->
+
+<div class="slim-footer" th:include="fragments/footer::footer"></div><!-- slim-footer -->
+
+<script th:src="@{/slim/lib/popper.js/js/popper.js}"></script>
+<script th:src="@{/slim/lib/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{/slim/lib/jquery.cookie/js/jquery.cookie.js}"></script>
+<script th:src="@{/slim/lib/datatables/js/jquery.dataTables.js}"></script>
+<script th:src="@{/slim/lib/datatables-responsive/js/dataTables.responsive.js}"></script>
+<script th:src="@{/custom/plugins/blockui/jquery.blockUI.js}"></script>
+<script th:src="@{/slim/lib/jquery.steps/js/jquery.steps.js}"></script>
+<script th:src="@{/slim/js/slim.js}"></script>
+<script th:src="@{/custom/js/custom.js}"></script>
+<script>
+    $(function () {
+        'use strict';
+
+        $('#datatable1').DataTable({
+            responsive: true,
+            language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+                lengthMenu: '_MENU_ items/page',
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

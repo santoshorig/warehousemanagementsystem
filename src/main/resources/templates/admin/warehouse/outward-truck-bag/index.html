@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/outward/edit/'+${outwardTruck.outward.getId()}}"
+                                            th:text="#{admin.menu.outward.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.outward.trucks}">
+                        Trucks</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <div class="pd-10 mt-2 bd-y bd-warning">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.trucks}">Trucks</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.bags}">Bags</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)"
+                                            th:text="#{admin.menu.outward.qc}">QC</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <div th:replace="fragments/messages::messages"></div>
+            <div class="alert mg-t-20 alert-danger" role="alert" th:if="${allowedBagsBalesDrums > 0}">
+                <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong th:text="#{admin.grid.outward.truck.bag.pendingbags}">Pending Bags to enter for</strong>
+                <strong th:text="${outwardTruck.vehicleNumber}">vehicle number</strong>
+                <strong th:text="#{admin.grid.outward.truck.bag.fortruck}">for truck are</strong>
+                <strong th:text="${allowedBagsBalesDrums}">Bags</strong>
+            </div><!-- alert -->
+            <div class="table-wrapper">
+                <table class="table table-bordered display responsive wrap" id="datatable1"
+                       th:if="${!models.isEmpty()}">
+                    <thead class="thead-colored bg-info">
+                    <tr>
+                        <th class="wd-5p" th:text="#{admin.grid.outward.truck.bag.bagid}">Bag Id</th>
+                        <th class="wd-15p" th:text="#{admin.grid.outward.truck.bag.stack}">Stack</th>
+                        <th class="wd-15p" th:text="#{admin.grid.outward.truck.bag.type}">Bag Type</th>
+                        <th class="wd-15p" th:text="#{admin.grid.outward.truck.bag.calculatedweight}">Calculated Weight
+                            (KG)
+                        </th>
+                        <th th:text="#{admin.grid.actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="model :${models}">
+                        <td th:text="${model.id}"></td>
+                        <td th:text="${model.doInwardTruckBag.inwardTruckBag.warehouseStack.friendlyName}"></td>
+                        <td th:text="${model.doInwardTruckBag.inwardTruckBag.bagType.friendlyName}"></td>
+                        <td th:text="${model.doInwardTruckBag.calculatedWeight}"></td>
+                        <td>
+                            <a class="btn btn-primary btn-icon"
+                               th:href="@{'/admin/'+${controller}+'/edit/outwardTruck/'+${outwardTruck.getId()}}"
+                               th:title="#{admin.grid.new}" th:unless="${allowedBagsBalesDrums == 0}">
+                                <div><i class="icon ion-plus"></i></div>
+                            </a>
+                            <a class="btn btn-warning btn-icon"
+                               th:href="@{'/admin/outward-truck-quality-check/index/outwardTruck/'+${outwardTruck.id}}"
+                               th:if="${allowedBagsBalesDrums == 0}" th:title="#{admin.grid.next}">
+                                <div><i class="icon ion-arrow-right-a"></i></div>
+                            </a>
+                            <a class="btn btn-danger btn-icon"
+                               onclick="return confirm('Are you sure you want to delete this record?');"
+                               th:href="@{'/admin/'+${controller}+'/delete/'+${model.id}}"
+                               th:title="#{admin.grid.delete}">
+                                <div><i class="icon ion-close"></i></div>
+                            </a>
+                            <a class="btn btn-danger btn-icon"
+                               onclick="return confirm('Are you sure you want to delete all records?');"
+                               th:href="@{'/admin/'+${controller}+'/delete-all/'+${outwardTruck.id}}"
+                               th:title="#{admin.grid.deleteall}">
+                                <div><i class="icon ion-close-circled"></i></div>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

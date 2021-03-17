@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="row mg-b-10">
+                <div class="col-lg-6">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mg-b-0">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.table.property}">Property</th>
+                                <th th:text="#{admin.table.value}">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="#{admin.table.client.applicationnumber}">Application Number</td>
+                                <td th:text="${model.client.code}">Code</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.name}">Name</td>
+                                <td th:text="${model.client.name}">Name</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.mobilenumber}">Mobile Number</td>
+                                <td th:text="${model.client.mobileNumber}">Mobile Number</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.businessaddress}">Business Address</td>
+                                <td th:text="${model.businessAddress}">Business Address</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.natureoforganization}">Nature Of Organization</td>
+                                <td th:text="${model.client.clientConstitution.name}">Client Constitution</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.typeofbusiness}">Type Of Business</td>
+                                <td th:text="${model.client.clientType.name}">Client Type</td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.dateofincorporation}">Date Of Incorporation</td>
+                                <td th:text="${#dates.format(model.client.dateOfIncorporation, 'dd-MMM-yyyy')}">Date Of
+                                    Incorporation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.pannumber}">PAN Number</td>
+                                <td th:text="${model.client.panNumber}">PAN Number
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{admin.table.client.documents}">Documents</td>
+                                <td>
+                                    <ul class="list-group list-group-striped">
+                                        <li class="list-group-item"
+                                            th:each="clientDocument: ${model.clientDocument}">
+                                            <p class="mg-b-0">
+                                                <span class="text-muted" th:text="${clientDocument.documentType.name}">Document Type</span>
+                                                <a target="_blank"
+                                                   th:href="@{'/admin/document/download/'+${clientDocument.document.id}}"><i
+                                                        class="icon ion-folder"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-layout">
+                        <form data-parsley-validate="" enctype="multipart/form-data"
+                              id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/risk-approval-save'}"
+                              th:object="${clientRemarkRiskForm}">
+                            <div th:replace="fragments/alerts::alerts"></div>
+                            <div th:replace="fragments/messages::messages"></div>
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card"
+                                     th:each="clientPartnerForm, stat: ${clientRemarkRiskForm.getClientPartnerFormList()}">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + clientPartnerForm.clientPartner.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + clientPartnerForm.clientPartner.id}"
+                                           th:href="${'#collapse' + clientPartnerForm.clientPartner.id}"
+                                           th:text="${clientPartnerForm.clientPartner.name}">
+                                            Partner Name
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + clientPartnerForm.clientPartner.id}"
+                                         th:id="${'collapse' + clientPartnerForm.clientPartner.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <a class="btn btn-oblong btn-outline-primary btn-block mg-b-10 viewpartner"
+                                                       href="javascript:void(0);"
+                                                       th:data-partner="${clientPartnerForm.clientPartner.id}"
+                                                       th:text="#{admin.grid.viewpartner}">View Details
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label"
+                                                               th:text="#{admin.form.clientpartner.highmarkriskcategory}">HighMark
+                                                            Risk Category: </label><span
+                                                            class="tx-danger">&nbsp;*</span>
+                                                        <select class="form-control select2-show-search"
+                                                                th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner.highmarkRiskCategory}">
+                                                            <option th:each="highMarkRiskCategory: ${highMarkRiskCategories}"
+                                                                    th:text="${highMarkRiskCategory.name}"
+                                                                    th:value="${highMarkRiskCategory.id}"></option>
+                                                        </select>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label"
+                                                               th:text="#{admin.form.clientpartner.highmarkscore}">HighMark
+                                                            Score: </label>
+                                                        <input class="form-control" data-parsley-trigger="change"
+                                                               max="900"
+                                                               th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner.highmarkScore}"
+                                                               th:placeholder="#{admin.form.clientpartner.highmarkscore}"
+                                                               type="text">
+                                                    </div>
+                                                </div><!-- col-6 -->
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label"
+                                                               th:text="#{admin.form.clientpartner.cibilscore}">Cibil
+                                                            Score: </label>
+                                                        <input class="form-control" data-parsley-trigger="change"
+                                                               max="900"
+                                                               th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner.cibilScore}"
+                                                               th:placeholder="#{admin.form.clientpartner.cibilscore}"
+                                                               type="text">
+                                                    </div>
+                                                </div><!-- col-6 -->
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label"
+                                                               th:text="#{admin.form.clientpartner.highmarkcomments}">HighMark
+                                                            Comments: </label>
+                                                        <textarea class="form-control" data-parsley-maxlength="255"
+                                                                  data-parsley-trigger="change"
+                                                                  th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner.highmarkComments}"
+                                                                  th:placeholder="#{admin.form.clientpartner.highmarkcomments}"></textarea>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label"
+                                                               th:text="#{admin.form.clientpartner.cibilcomments}">Cibil
+                                                            Comments: </label>
+                                                        <textarea class="form-control" data-parsley-maxlength="255"
+                                                                  data-parsley-trigger="change"
+                                                                  th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner.cibilComments}"
+                                                                  th:placeholder="#{admin.form.clientpartner.cibilcomments}"></textarea>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                                <div class="col-lg-12 mg-t-40 mg-lg-t-0">
+                                                    <span th:text="#{admin.form.clientpartner.highmarkdocument}">HighMark Document: </span>
+                                                    <small th:if="${clientPartnerForm.clientPartner.getHighmarkDocument() != null}">
+                                                        <a class="tx-indigo"
+                                                           target="_blank"
+                                                           th:href="@{'/admin/document/download/'+${clientPartnerForm.clientPartner.getHighmarkDocument().getId()}}"
+                                                           th:text="#{admin.grid.downloadexisting}"
+                                                           th:title="#{admin.grid.download}">Download
+                                                            Existing
+                                                        </a>
+                                                    </small>
+                                                    <div class="custom-file mg-t-8">
+                                                        <input class="custom-file-input"
+                                                               th:field="*{clientPartnerFormList[__${stat.index}__].highmarkUpload}"
+                                                               type="file">
+                                                        <label class="custom-file-label custom-file-label-primary"
+                                                               th:text="#{admin.form.clientpartner.highmarkdocument}">HighMark
+                                                            Document: </label>
+                                                    </div><!-- custom-file -->
+                                                </div><!-- col-12 -->
+                                                <div class="col-lg-12 mg-t-40 mg-lg-t-0">
+                                                    <span th:text="#{admin.form.clientpartner.cibildocument}">CIBIL Document: </span>
+                                                    <small th:if="${clientPartnerForm.clientPartner.getCibilDocument() != null}">
+                                                        <a class="tx-indigo"
+                                                           target="_blank"
+                                                           th:href="@{'/admin/document/download/'+${clientPartnerForm.clientPartner.getCibilDocument().getId()}}"
+                                                           th:text="#{admin.grid.downloadexisting}"
+                                                           th:title="#{admin.grid.download}">Download
+                                                            Existing
+                                                        </a>
+                                                    </small>
+                                                    <div class="custom-file mg-t-8">
+                                                        <input class="custom-file-input"
+                                                               th:field="*{clientPartnerFormList[__${stat.index}__].cibilUpload}"
+                                                               type="file">
+                                                        <label class="custom-file-label custom-file-label-primary"
+                                                               th:text="#{admin.form.clientpartner.cibildocument}">CIBIL
+                                                            Document: </label>
+                                                    </div><!-- custom-file -->
+                                                </div><!-- col-12 -->
+                                                <input class="form-control"
+                                                       th:field="*{clientPartnerFormList[__${stat.index}__].clientPartner}"
+                                                       th:value="*{clientPartnerFormList[__${stat.index}__].clientPartner}"
+                                                       type="hidden"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mg-b-10">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               th:text="#{admin.form.client.fundingeligible}">Funding Eligible: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <select class="form-control select2-show-search" required=""
+                                                th:field="*{fundingEligible}">
+                                            <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                            <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                        </select>
+                                    </div>
+                                </div><!-- col-12 -->
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               th:text="#{admin.form.client.remarks}">Remarks: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <small>
+                                            <a class="tx-indigo viewremarks"
+                                               href="javascript:void(0);" th:data-client="${model.client.id}"
+                                               th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                            </a>
+                                        </small>
+                                        <textarea class="form-control" data-parsley-minlength="2"
+                                                  data-parsley-trigger="change"
+                                                  required="" th:field="*{remark}"
+                                                  th:placeholder="#{admin.form.client.remarks}"></textarea>
+                                    </div>
+                                </div><!-- col-12 -->
+                            </div><!-- row -->
+                            <div class="row mg-b-10">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label tx-success tx-bold"
+                                               th:text="#{admin.form.client.status}">Status: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <select class="form-control select2-show-search"
+                                                th:field="*{status}">
+                                            <option th:each="status: ${statuses}"
+                                                    th:text="${status}"
+                                                    th:value="${status}"></option>
+                                        </select>
+                                    </div>
+                                </div><!-- col-12 -->
+                            </div><!-- row -->
+
+                            <div class="form-layout-footer">
+                                <input class="form-control" th:field="*{client}" th:value="*{client}" type="hidden"/>
+                                <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                        type="submit">
+                                    Submit
+                                </button>
+                                <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                        type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- form-layout -->
+                </div>
+            </div>
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="remarksmodalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+        <div class="modal fade" id="partnermodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.details}">
+                            Partner</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mg-b-0">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{admin.table.property}">Property</th>
+                                    <th th:text="#{admin.table.value}">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.name}">Name</td>
+                                    <td class="partnervalues" id="partnername"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.fathersname}">Father's Name</td>
+                                    <td class="partnervalues" id="partnerfathersname"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.dateofbirth}">Date Of Birth</td>
+                                    <td class="partnervalues" id="partnerdateofbirth"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.mobilenumber}">Mobile Number</td>
+                                    <td class="partnervalues" id="partnermobilenumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.address}">Address</td>
+                                    <td class="partnervalues" id="partneraddress"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.pannumber}">PAN Number</td>
+                                    <td class="partnervalues" id="partnerpannumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.aadharnumber}">Aadhar Number</td>
+                                    <td class="partnervalues" id="partneraadharnumber"></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{admin.table.clientpartner.active}">Active</td>
+                                    <td class="partnervalues" id="partneractive"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var client = $(this).data("client");
+                    if (client) {
+                        $.ajax({
+                            url: baseUrl + '/client-remark/getByClient/' + client,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#remarksmodalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#remarksmodalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+                $('.viewpartner').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var partner = $(this).data("partner");
+                    if (partner) {
+                        $.ajax({
+                            url: baseUrl + '/client-partner/get/' + partner,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $(".partnervalues").html('');
+                            },
+                            success: function (data) {
+                                if (data) {
+                                    $("#partnername").html(data.name);
+                                    $("#partnerfathersname").html(data.fathersName);
+                                    $("#partnerdateofbirth").html(data.dob);
+                                    $("#partnermobilenumber").html(data.mobileNumber);
+                                    $("#partneraddress").html(data.fullAddress);
+                                    $("#partnerpannumber").html(data.panNumber);
+                                    $("#partneraadharnumber").html(data.aadharNumber);
+                                    $("#partneractive").html(data.active);
+                                }
+                                $('#partnermodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

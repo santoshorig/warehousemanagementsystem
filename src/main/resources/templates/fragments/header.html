@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-header" th:fragment="header">
+    <div class="container">
+        <div class="slim-header-left">
+            <h2 class="slim-logo"><a href="javascript:" th:text="#{admin.header.title}">WMS</a></h2>
+        </div><!-- slim-header-left -->
+        <div class="slim-header-right">
+            <div class="dropdown dropdown-a">
+                <a class="header-notification" data-toggle="dropdown" href="javascript:void(0);">
+                    <i class="icon ion-ios-bolt-outline"></i>
+                    <span class="indicator" th:if="${!notifications.isEmpty()}"></span>
+                </a>
+                <div class="dropdown-menu">
+                    <div class="dropdown-menu-header">
+                        <h6 class="dropdown-menu-title" th:text="#{admin.header.notifications}">Notifications</h6>
+                    </div><!-- dropdown-menu-header -->
+                    <div class="dropdown-activity-list">
+                        <div class="activity-item" th:each="notification :${notifications}">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <span th:text="${notification.value}">Notification Message</span>
+                                    <a class="text-danger"
+                                       th:href="@{/admin/client/index}"
+                                       th:if="${#strings.equalsIgnoreCase(notification.key, 'client')}"
+                                       th:text="#{admin.header.view}">View</a>
+                                    <a class="text-danger"
+                                       th:href="@{/admin/contract/index}"
+                                       th:if="${#strings.equalsIgnoreCase(notification.key, 'contract')}"
+                                       th:text="#{admin.header.view}">View</a>
+                                    <a class="text-danger"
+                                       th:href="@{/admin/warehouse/index}"
+                                       th:if="${#strings.equalsIgnoreCase(notification.key, 'warehouse')}"
+                                       th:text="#{admin.header.view}">View</a>
+                                    <a class="text-danger"
+                                       th:href="@{/admin/inward/index}"
+                                       th:if="${#strings.equalsIgnoreCase(notification.key, 'inward')}"
+                                       th:text="#{admin.header.view}">View</a>
+                                </div>
+                            </div><!-- row -->
+                        </div><!-- activity-item -->
+                    </div><!-- dropdown-activity-list -->
+                </div><!-- dropdown-menu-right -->
+            </div><!-- dropdown -->
+            <div class="dropdown dropdown-c">
+                <a class="logged-user" data-toggle="dropdown" href="#">
+                    <img th:alt="${userFirstName}" th:if="${isFemale}" th:src="@{/custom/img/female.png}">
+                    <img th:alt="${userFirstName}" th:src="@{/custom/img/male.png}" th:unless="${isFemale}">
+                    <span th:text="${userFirstName}"></span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <nav class="nav">
+                        <a class="nav-link" href="javascript:"><i
+                                class="icon ion-person"></i>&nbsp;<span
+                                th:text="${userDetails}">User Details</span></a>
+                        <a class="nav-link" th:href="@{'/admin/profile/edit/'+${userId}}"><i
+                                class="icon ion-person-stalker"></i>&nbsp;<span
+                                th:text="#{admin.header.profile}">Profile</span></a>
+                        <a class="nav-link" th:href="@{/logout}"><i class="icon ion-forward"></i>&nbsp;<span
+                                th:text="#{admin.header.logout}">Log Out</span></a>
+                    </nav>
+                </div><!-- dropdown-menu -->
+            </div><!-- dropdown -->
+        </div><!-- header-right -->
+    </div><!-- container -->
+</div><!-- slim-header -->
+
+</html>

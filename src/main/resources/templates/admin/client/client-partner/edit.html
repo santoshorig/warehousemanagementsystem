@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/client/edit/'+${model.getClient().getId()}}"
+                                            th:text="#{admin.menu.client.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="${model.client.clientConstitution.partnershipLabel}">
+                        Partners</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.address}">Address</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.bankaccounts}">
+                        Bank Accounts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.signatories}">Signatories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.client.documents}">Documents</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title"
+                   th:text="${#strings.capitalizeWords(model.client.clientConstitution.partnershipLabel)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.client.friendlyName}">Client Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientpartner.title}">Title: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" th:field="*{title}">
+                                    <option th:each="title: ${titles}" th:text="${title}"
+                                            th:value="${title}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.firstname}">First
+                                    Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{firstName}"
+                                       th:placeholder="#{admin.form.clientpartner.firstname}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.middlename}">Middle
+                                    Name: </label>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:field="*{middleName}"
+                                       th:placeholder="#{admin.form.clientpartner.middlename}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.lastname}">Last
+                                    Name: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{lastName}"
+                                       th:placeholder="#{admin.form.clientpartner.lastname}" type="text">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientpartner.fathersname}">Father's
+                                    Name: </label><span
+                                    class="tx-danger" th:if="${!isGovernment}">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:attrappend="required=${!isGovernment} ? 'required'"
+                                       th:field="*{fathersName}"
+                                       th:placeholder="#{admin.form.clientpartner.fathersname}" type="text">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientpartner.dateofbirth}">Date Of Birth: </label><span
+                                    class="tx-danger" th:if="${!isGovernment}">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       th:attrappend="required=${!isGovernment} ? 'required'"
+                                       th:field="*{dateOfBirth}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.clientpartner.dateofbirth}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-12 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.clientpartner.mobilenumber}">Mobile Phone: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-pattern="^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{mobileNumber}"
+                                       th:placeholder="#{admin.form.clientpartner.mobilenumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.pannumber}">PAN
+                                    Number: </label><span
+                                    class="tx-danger" th:if="${panNumberRequired}">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-pattern="^[A-Za-z]{5}\d{4}[A-Za-z]{1}$"
+                                       data-parsley-trigger="change"
+                                       th:attrappend="required=${panNumberRequired} ? 'required'"
+                                       th:field="*{panNumber}"
+                                       th:placeholder="#{admin.form.clientpartner.pannumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.aadharnumber}">Aadhar
+                                    Number: </label><span
+                                    class="tx-danger" th:if="${aadharNumberRequired}">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-pattern="^[2-9]{1}[0-9]{11}$"
+                                       data-parsley-trigger="change"
+                                       th:attrappend="required=${aadharNumberRequired} ? 'required'"
+                                       th:field="*{aadharNumber}"
+                                       th:placeholder="#{admin.form.clientpartner.aadharnumber}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.addressline1}">Address
+                                    Line 1: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       data-parsley-trigger="change"
+                                       required="" th:field="*{addressLine1}"
+                                       th:placeholder="#{admin.form.clientpartner.addressline1}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.addressline2}">Address
+                                    Line 2: </label>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:field="*{addressLine2}"
+                                       th:placeholder="#{admin.form.clientpartner.addressline2}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" th:text="#{admin.form.clientpartner.addressline3}">Address
+                                    Line 3: </label>
+                                <input class="form-control" data-parsley-maxlength="255"
+                                       data-parsley-trigger="change"
+                                       th:field="*{addressLine3}"
+                                       th:placeholder="#{admin.form.clientpartner.addressline1}" type="text">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.location}">Location: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required=""
+                                        th:field="*{location}">
+                                    <option th:each="location: ${locations}"
+                                            th:text="${location}"
+                                            th:value="${location.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.active}">Active: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required="" th:field="*{active}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{id}" th:value="*{id}" type="hidden"/>
+                        <input class="form-control" th:field="*{cibilScore}" th:value="*{cibilScore}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{cibilComments}" th:value="*{cibilComments}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{highmarkScore}" th:value="*{highmarkScore}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{highmarkComments}" th:value="*{highmarkComments}"
+                               type="hidden"/>
+                        <input class="form-control" th:field="*{highmarkRiskCategory}"
+                               th:value="*{highmarkRiskCategory}" type="hidden"/>
+                        <input class="form-control" th:field="*{client}"
+                               th:value="*{client}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+</html>

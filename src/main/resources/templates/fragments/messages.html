@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="alert mg-b-20 mg-t-10" role="alert" th:classappend="${success} ? alert-success : alert-danger"
+     th:fragment="messages" th:if="${msg != null}">
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong th:text="${msg}">Message</strong>
+</div><!-- alert -->
+
+</html>

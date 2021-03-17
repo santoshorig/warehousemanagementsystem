@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse/edit/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.registration}">
+                        Registration</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-commodity/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.commodity}">Commodity</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-owner/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.owner}">
+                        Owner</a></li>
+
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-detail/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.basic}">Basic</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-weighbridge/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.weighbridge}">Weighbridge</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-manpower/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.manpower}">
+                        Manpower</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-asset/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.asset}">
+                        Asset</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-consumable/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.consumable}">
+                        Consumable</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-stack/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.stack}">
+                        Stack</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-cad/index/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.cad}">
+                        CAD</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{'/admin/warehouse-document/edit/warehouse/'+${model.warehouse.getId()}}"
+                                            th:text="#{admin.menu.warehouse.warehouse.documents}">
+                        Documents</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.warehouse.warehouse.inspection}">
+                        Inspection</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <p class="mg-b-20 mg-sm-b-40" th:text="${model.warehouse.friendlyName}">Warehouse Friendly Name</p>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12 mg-t-10 mg-b-10"
+                             th:each="warehouseInspectionTypesForm, warehouseInspectionTypesFormStat: ${model.getWarehouseInspectionTypesForm()}">
+                            <p class="tx-indigo tx-bold tx-15"
+                               th:text="${#strings.capitalizeWords(warehouseInspectionTypesForm.inspectionType.name)}">
+                                Inspection
+                                Type</p>
+                            <div class="row mg-b-10 pd-10 bd"
+                                 th:each="warehouseInspectionForm, warehouseInspectionFormStat: ${warehouseInspectionTypesForm.getWarehouseInspectionForm()}">
+                                <div class="col-lg-12">
+                                    <div class="row mg-b-10">
+                                        <div class="col-lg-4">
+                                            <span th:text="${warehouseInspectionForm.inspection.name}">Inspection Name</span>
+                                        </div><!-- col-2 -->
+                                        <div class="col-lg-2"
+                                             th:each="warehouseInspectionOption, warehouseInspectionOptionStat: ${warehouseInspectionForm.getInspectionOption()}">
+                                            <span class="text-danger"
+                                                  th:text="${warehouseInspectionOption.friendlyName}">Inspection Value</span>
+                                        </div><!-- col-2 -->
+                                    </div>
+                                    <div class="row mg-b-10">
+                                        <div class="col-lg-4">
+                                            &nbsp;
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <select class="form-control select2-show-search" required=""
+                                                    th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.inspectionOption}">
+                                                <option th:each="inspectionOption: ${warehouseInspectionForm.getInspectionOption()}"
+                                                        th:text="${inspectionOption.label}"
+                                                        th:value="${inspectionOption.id}"></option>
+                                            </select>
+                                        </div><!-- col-2 -->
+                                        <div class="col-lg-2">
+                                            <input class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.data}"
+                                                   th:placeholder="#{admin.form.warehouseinspection.data}" type="text">
+                                        </div><!-- col-6 -->
+                                        <div class="col-lg-2">
+                                            <select class="form-control select2-show-search"
+                                                    th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.documentType}">
+                                                <option th:text="#{admin.form.option.none}" value="">None</option>
+                                                <option th:each="documentType: ${documentTypes}"
+                                                        th:text="${documentType.name}"
+                                                        th:value="${documentType.id}"></option>
+                                            </select>
+                                        </div><!-- col-3 -->
+                                        <div class="col-lg-2">
+                                            <input class="custom-file-input"
+                                                   th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].upload}"
+                                                   type="file">
+                                            <label class="custom-file-label custom-file-label-primary"
+                                                   th:text="#{admin.form.warehouseinspection.upload}">Upload: </label>
+                                        </div><!-- col-3 -->
+                                    </div>
+                                </div>
+                                <input th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.id}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.riskScore}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.documentType}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.document}"
+                                       type="hidden"/>
+                                <input th:field="*{warehouseInspectionTypesForm[__${warehouseInspectionTypesFormStat.index}__].warehouseInspectionForm[__${warehouseInspectionFormStat.index}__].warehouseInspection.warehouse}"
+                                       type="hidden"/>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.warehouseinspection.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-warehouse="${model.warehouse.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.warehouseinspection.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.warehouseinspection.review}">Send for Review: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" required="required"
+                                        th:field="*{review}">
+                                    <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                    <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div>
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{warehouse}"
+                               th:value="*{warehouse}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var warehouse = $(this).data("warehouse");
+                    if (warehouse) {
+                        $.ajax({
+                            url: baseUrl + '/warehouse-remark/getByWarehouse/' + warehouse,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

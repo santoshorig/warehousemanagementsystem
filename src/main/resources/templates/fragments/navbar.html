@@ -1,0 +1,269 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-navbar" th:fragment="navbar">
+    <div class="container">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link nav-item-link" th:href="@{/admin/home}">
+                    <i class="icon ion-ios-home-outline"></i>
+                    <span th:text="#{admin.menu.dashboard}">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item with-sub" sec:authorize="hasRole('ADMIN')">
+                <a class="nav-link" href="javascript:void(0);">
+                    <i class="icon ion-ios-book-outline"></i>
+                    <span th:text="#{admin.menu.master}">Master</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.security}">Security</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/user/index}"
+                                       th:text="#{admin.menu.master.security.user}">User</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.bank}">Bank</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/bank/index}"
+                                       th:text="#{admin.menu.master.bank.bank}">Bank</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/bank-branch/index}"
+                                       th:text="#{admin.menu.master.bank.bankbranch}">Bank Branch</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.client}">Client</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/client-type/index}"
+                                       th:text="#{admin.menu.master.client.clienttype}">Type</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/client-constitution/index}"
+                                       th:text="#{admin.menu.master.client.clientconstitution}">Constitution</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/client-mode-of-operation/index}"
+                                       th:text="#{admin.menu.master.client.clientmodeofoperation}">Mode Of Operation</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/contract/lock}"
+                                       th:text="#{admin.menu.master.client.contract}">Contract</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.document}">Document</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/document-purpose/index}"
+                                       th:text="#{admin.menu.master.document.documentpurpose}">Purpose</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/document-type/index}"
+                                       th:text="#{admin.menu.master.document.documenttype}">Type</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.general}">General</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/business-type/index}"
+                                       th:text="#{admin.menu.master.general.businesstype}">Business Type</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/commodity/index}"
+                                       th:text="#{admin.menu.master.general.commodity}">Commodity</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/utilization-factor/index}"
+                                       th:text="#{admin.menu.master.general.utilizationfactor}">Utilization Factor</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/bag-type/index}"
+                                       th:text="#{admin.menu.master.general.bagtype}">Bag Type</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.hr}">HR</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/employee-position/index}"
+                                       th:text="#{admin.menu.master.hr.employeeposition}">Position</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/employee/index}"
+                                       th:text="#{admin.menu.master.hr.employee}">Employee</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.insurance}">Insurance</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/policy-owner/index}"
+                                       th:text="#{admin.menu.master.insurance.policyowner}">Policy Owner</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/policy-type/index}"
+                                       th:text="#{admin.menu.master.insurance.policytype}">Policy Type</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/insurance/index}"
+                                       th:text="#{admin.menu.master.insurance.insurance}">Insurance</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.location}">Location</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/state/index}"
+                                       th:text="#{admin.menu.master.location.state}">State</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/district/index}"
+                                       th:text="#{admin.menu.master.location.district}">District</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/location/index}"
+                                       th:text="#{admin.menu.master.location.location}">Location</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/region/index}"
+                                       th:text="#{admin.menu.master.location.region}">Region</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.risk}">Risk</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/highmark-risk-category/index}"
+                                       th:text="#{admin.menu.master.risk.highmarkriskcategory}">Highmark Risk
+                                    Category</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.finance}">Finance</a>
+                            <ul>
+                                <li class="hide"><a class="nav-item-link" th:href="@{/admin/finance-entity/index}"
+                                                    th:text="#{admin.menu.master.finance.financeentity}">Finance
+                                    Entity</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/spot-price/index}"
+                                       th:text="#{admin.menu.master.finance.spotprice}">Spot Price</a></li>
+                                <li class="hide"><a class="nav-item-link" th:href="@{/admin/margin/index}"
+                                                    th:text="#{admin.menu.master.finance.margin}">Margin</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-with-sub">
+                            <a href="javascript:void(0);" th:text="#{admin.menu.master.warehouse}">Warehouse</a>
+                            <ul>
+                                <li><a class="nav-item-link" th:href="@{/admin/basis-of-takeover/index}"
+                                       th:text="#{admin.menu.master.warehouse.basisoftakeover}">Basis Of Takeover</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/status-of-party/index}"
+                                       th:text="#{admin.menu.master.warehouse.statusofparty}">Status Of Party</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/takeover-type/index}"
+                                       th:text="#{admin.menu.master.warehouse.takeovertype}">Takeover Type</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/warehouse-type/index}"
+                                       th:text="#{admin.menu.master.warehouse.warehousetype}">Warehouse Type</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/add-on-service/index}"
+                                       th:text="#{admin.menu.master.warehouse.addonservice}">Add On Service</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/material-owner/index}"
+                                       th:text="#{admin.menu.master.warehouse.materialowner}">Material Owner</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/quality-parameter/index}"
+                                       th:text="#{admin.menu.master.warehouse.qualityparameter}">Quality Parameter</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/quality-lab/index}"
+                                       th:text="#{admin.menu.master.warehouse.qualitylab}">Quality Lab</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/head-office/index}"
+                                       th:text="#{admin.menu.master.warehouse.headoffice}">Head Office</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/tender-client/index}"
+                                       th:text="#{admin.menu.master.warehouse.tenderclient}">Tender Client</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/tender/index}"
+                                       th:text="#{admin.menu.master.warehouse.tender}">Tender</a></li>
+                                <li><a class="nav-item-link" th:href="@{/admin/inspection-type/index}"
+                                       th:text="#{admin.menu.master.warehouse.inspectiontype}">Inspection Type</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/inspection/index}"
+                                       th:text="#{admin.menu.master.warehouse.inspection}">Inspection</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/inspection-option/index}"
+                                       th:text="#{admin.menu.master.warehouse.inspectionoption}">Inspection Option</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/weighbridge-type/index}"
+                                       th:text="#{admin.menu.master.warehouse.weighbridgetype}">Weighbridge Type</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/weighbridge/index}"
+                                       th:text="#{admin.menu.master.warehouse.weighbridge}">Weighbridge</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/asset/index}"
+                                       th:text="#{admin.menu.master.warehouse.asset}">Asset</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/consumable/index}"
+                                       th:text="#{admin.menu.master.warehouse.consumable}">Consumable</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/manpower/index}"
+                                       th:text="#{admin.menu.master.warehouse.manpower}">Manpower</a>
+                                </li>
+                                <li><a class="nav-item-link" th:href="@{/admin/supplier/index}"
+                                       th:text="#{admin.menu.master.warehouse.supplier}">Supplier</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- dropdown-menu -->
+            </li>
+            <li class="nav-item with-sub"
+                sec:authorize="hasAnyRole('MIS_FIELD', 'BD_REVIEWER', 'OPS_BH_APPROVER', 'RISK_USER', 'RISK_APPROVER', 'MGMT_APPROVER')">
+                <a class="nav-link" href="javascript:void(0);">
+                    <i class="icon ion-ionic"></i>
+                    <span th:text="#{admin.menu.client}">Client</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li sec:authorize="hasAnyRole('MIS_FIELD', 'BD_REVIEWER', 'RISK_USER', 'RISK_APPROVER', 'MGMT_APPROVER')">
+                            <a th:href="@{/admin/client/index}"
+                               th:text="#{admin.menu.client.registration}">Registration</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('MIS_FIELD', 'BD_REVIEWER', 'OPS_BH_APPROVER', 'MGMT_APPROVER')">
+                            <a th:href="@{/admin/contract/index}"
+                               th:text="#{admin.menu.client.contract}">Contract</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item with-sub"
+                sec:authorize="hasAnyRole('IW_OW_OPS', 'MIS_OPS', 'OPS_REVIEWER', 'SR_MAKER', 'BD_REVIEWER', 'SR_CHECKER', 'MIS_SR_WR_DO_OW', 'DO_CHECKER', 'RISK_USER', 'RISK_APPROVER', 'SR_SIGNATORY', 'MGMT_APPROVER')">
+                <a class="nav-link" href="javascript:void(0);">
+                    <i class="icon ion-bag"></i>
+                    <span th:text="#{admin.menu.warehouse}">Warehouse</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li sec:authorize="hasAnyRole('MIS_OPS', 'OPS_REVIEWER', 'RISK_USER', 'RISK_APPROVER', 'MGMT_APPROVER')">
+                            <a th:href="@{/admin/warehouse/index}"
+                               th:text="#{admin.menu.warehouse.takeover}">Takeover</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('IW_OW_OPS', 'MIS_OPS')">
+                            <a th:href="@{/admin/inward/index}"
+                               th:text="#{admin.menu.warehouse.inward}">Inward</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('SR_MAKER', 'SR_CHECKER', 'SR_SIGNATORY')">
+                            <a th:href="@{/admin/sr/index}"
+                               th:text="#{admin.menu.warehouse.sr}">SR</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('MIS_SR_WR_DO_OW', 'DO_CHECKER')">
+                            <a th:href="@{/admin/lr/index}"
+                               th:text="#{admin.menu.warehouse.lr}">LR</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('MIS_SR_WR_DO_OW', 'DO_CHECKER')" class="hide">
+                            <a th:href="@{/admin/do/index}"
+                               th:text="#{admin.menu.warehouse.do}">DO</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('IW_OW_OPS', 'MIS_OPS')" class="hide">
+                            <a th:href="@{/admin/outward/index}"
+                               th:text="#{admin.menu.warehouse.outward}">Outward</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('MIS_OPS', 'OPS_REVIEWER', 'MGMT_APPROVER')">
+                            <a th:href="@{/admin/warehouse-closure/index}"
+                               th:text="#{admin.menu.warehouse.closure}">Closure</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item with-sub"
+                sec:authorize="hasAnyRole('RISK_USER', 'RISK_APPROVER', 'MGMT_APPROVER')">
+                <a class="nav-link" href="javascript:void(0);">
+                    <i class="icon ion-ios-book-outline"></i>
+                    <span th:text="#{admin.menu.reports}">Reports</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li>
+                            <a th:href="@{/admin/report/client}"
+                               th:text="#{admin.menu.reports.client}">Client</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/report/risk}"
+                               th:text="#{admin.menu.reports.risk}">Risk</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div><!-- container -->
+</div><!-- slim-navbar -->
+
+</html>

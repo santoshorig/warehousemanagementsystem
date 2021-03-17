@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/review-approval-save'}"
+                      th:object="${inwardRemarkForm}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion3"
+                                 role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'heading' + model.inward.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion3"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapse' + model.inward.id}"
+                                           th:href="${'#collapse' + model.inward.id}"
+                                           th:text="${model.inward.inwardType}">
+                                            Inward Type
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'heading' + model.inward.id}"
+                                         th:id="${'collapse' + model.inward.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th th:text="#{admin.table.property}">Property</th>
+                                                                <th th:text="#{admin.table.value}">Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.type}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.inward.inwardType}">Inward Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.caddate}">
+                                                                    CAD Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(model.inward.cadDate, 'dd-MMM-yyyy')}">
+                                                                    Name
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.cadnumber}">
+                                                                    CAD Number
+                                                                </td>
+                                                                <td th:text="${model.inward.warehouseCad.friendlyName}">
+                                                                    CAD Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.cddnumber}">
+                                                                    CDD Number
+                                                                </td>
+                                                                <td th:text="${model.inward.cddNumber}">
+                                                                    CDD Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.status}">
+                                                                    Status
+                                                                </td>
+                                                                <td th:text="${model.inward.status}">Status</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.businesstype}">
+                                                                    Business Type
+                                                                </td>
+                                                                <td th:text="${model.inward.businessType.name}">Business
+                                                                    Type
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.contract}">
+                                                                    Contract
+                                                                </td>
+                                                                <td th:text="${model.inward.contract.friendlyName}">
+                                                                    Contract
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.warehouselocation}">
+                                                                    Warehouse Location
+                                                                </td>
+                                                                <td th:text="${model.location.friendlyName}">
+                                                                    Warehouse Location
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.commodities}">
+                                                                    Commodities
+                                                                </td>
+                                                                <td th:text="${model.inward.contract.commoditiesFriendlyName}">
+                                                                    Commodities
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.totalbags}">
+                                                                    Total Bags
+                                                                </td>
+                                                                <td th:text="${model.totalBags}">
+                                                                    Total Bags
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.totalnetweight}">
+                                                                    Total Net Weight
+                                                                </td>
+                                                                <td th:text="${#numbers.formatDecimal(model.totalNetWeightMt, 0, 'COMMA', 3, 'POINT')}">
+                                                                    Total Net Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inward.madeupbags}">
+                                                                    Made Up Bags
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="inwardMadeUpBag: ${model.madeUpBagsByWarehouseStack}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inward.stack}">Stack</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardMadeUpBag.key.friendlyName}">Stack</span>
+                                                                                <span class="ml-5 text-muted"
+                                                                                      th:text="#{admin.table.inward.count}">Count</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardMadeUpBag.value}">Count</span>
+                                                                                <span class="ml-5 text-muted"
+                                                                                      th:text="#{admin.table.inward.percentage}">Percentage</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${warehouseMadeUpBagStackUsagePercentage.get(inwardMadeUpBag.key.id)}">Percentage</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${model.inward.cadDocument != null}">
+                                                                <td th:text="#{admin.table.inward.caddocument}">
+                                                                    Gate Pass Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${model.inward.cadDocument.getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${model.inward.cddDocument != null}">
+                                                                <td th:text="#{admin.table.inward.cdddocument}">
+                                                                    Gate Pass Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${model.inward.cddDocument.getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${model.inward.grnDocument != null}">
+                                                                <td th:text="#{admin.table.inward.grndocument}">
+                                                                    Gate Pass Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${model.inward.grnDocument.getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div aria-multiselectable="true" class="accordion-two accordion-two-primary mg-b-25"
+                                 id="accordion4"
+                                 role="tablist">
+                                <div class="card" th:each="inwardTruck :${model.inwardTruckList}">
+                                    <div class="card-header" role="tab"
+                                         th:id="${'headingtruck' + inwardTruck.inwardTruck.id}">
+                                        <a aria-expanded="true" class="tx-gray-800 transition"
+                                           data-parent="#accordion4"
+                                           data-toggle="collapse"
+                                           th:aria-controls="${'collapsetruck' + inwardTruck.inwardTruck.id}"
+                                           th:href="${'#collapsetruck' + inwardTruck.inwardTruck.id}"
+                                           th:text="${inwardTruck.inwardTruck.friendlyName}">
+                                            Inward Truck
+                                        </a>
+                                    </div><!-- card-header -->
+                                    <div class="collapse show"
+                                         role="tabpanel"
+                                         th:aria-labelledby="${'headingtruck' + inwardTruck.inwardTruck.id}"
+                                         th:id="${'collapsetruck' + inwardTruck.inwardTruck.id}">
+                                        <div class="card-body">
+                                            <div class="row mg-b-10">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mg-b-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th th:text="#{admin.table.property}">Property</th>
+                                                                <th th:text="#{admin.table.value}">Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.vehiclenumber}">
+                                                                    Vehicle Number
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.vehicleNumber}">
+                                                                    Vehicle Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.hasLotNumber()}">
+                                                                <td th:text="#{admin.table.inwardtruck.lotnumber}">
+                                                                    LOT Number
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.lotNumber}">LOT
+                                                                    Number
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.cropyear}">
+                                                                    Crop Year
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.cropYear}">
+                                                                    Crop Year
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.dumpingdate}">
+                                                                    Dumping Date
+                                                                </td>
+                                                                <td th:text="${#dates.format(inwardTruck.inwardTruck.dumpingDate, 'dd-MMM-yyyy')}">
+                                                                    Dumping Date
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.totalbagsbalesdrums}">
+                                                                    Total Bags/Bales/Drums
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.totalBagsBalesDrums}">
+                                                                    Total Bags/Bales/Drums
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.grossweight}">
+                                                                    Gross Weight
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.grossWeight}">
+                                                                    Gross Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.tareweight}">
+                                                                    Tare Weight
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.tareWeight}">
+                                                                    Tare Weight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.averageweight}">
+                                                                    Average Weight Per Bag Type
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="grossWeightPerBagType: ${inwardTruck.getAverageGrossWeightPerBagType()}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.bagtype}">Bag Type</span>
+                                                                                <span class="ml-2 text-danger"
+                                                                                      th:text="${grossWeightPerBagType.key.friendlyName}">Bag Type</span>
+                                                                                <span class="ml-2 text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.bagtypecount}">
+                                                                                    Bag Type Count
+                                                                                </span>
+                                                                                <span class="ml-2 text-danger"
+                                                                                      th:text="${inwardTruck.getBagsGroupedByBagType().get(grossWeightPerBagType.key)}">
+                                                                                    Weight
+                                                                                </span>
+                                                                                <span class="ml-2 text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.averageweightforbagtype}">
+                                                                                    Average Weight For Bag Type (Kg)
+                                                                                </span>
+                                                                                <span class="ml-2 text-danger"
+                                                                                      th:text="${grossWeightPerBagType.value}">Weight</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.stackingdetails}">
+                                                                    Stacking Details
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="totalBagsInStack: ${inwardTruck.totalBagsInStack}">
+                                                                            <p class="mg-b-0">
+                                                                                <small class="text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stack}">Stack</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${totalBagsInStack.key.friendlyName}">Stack
+                                                                                    Name</small>
+                                                                                <small class="text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stackcommodity}">Stack
+                                                                                    Commodity</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${model.inward.contract.commoditiesFriendlyName}">Stack
+                                                                                    Commodity</small>
+                                                                                <small class="ml-2 text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktruckbagcount}">Stack
+                                                                                    Bag Count</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${inwardTruck.inwardTruckBagsInStack.get(totalBagsInStack.key)}">
+                                                                                    Stack Bag Count
+                                                                                </small>
+                                                                                <small class="ml-2 text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktruckbagweight}">Stack
+                                                                                    Bag Weight</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${#numbers.formatDecimal(inwardTruck.inwardTruckWeightInStack.get(totalBagsInStack.key), 0, 'COMMA', 3, 'POINT')}">
+                                                                                    Stack Bag Weight
+                                                                                </small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktruckbagweighttype}">
+                                                                                    Stack Bag Weight Type
+                                                                                </small>
+                                                                                <small class="ml-2 text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktotalbagcount}">Total
+                                                                                    Bag Count</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${inwardTruck.totalBagsInStack.get(totalBagsInStack.key)}">
+                                                                                    Total Bag Count
+                                                                                </small>
+                                                                                <small class="ml-2 text-muted"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktotalbagweight}">Total
+                                                                                    Bag Weight</small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="${#numbers.formatDecimal(inwardTruck.totalWeightInStack.get(totalBagsInStack.key), 0, 'COMMA', 3, 'POINT')}">
+                                                                                    Total Bag Weight
+                                                                                </small>
+                                                                                <small class="ml-1 text-danger"
+                                                                                       th:text="#{admin.table.inwardtruck.stacktotalbagweighttype}">
+                                                                                    Stack Bag Weight Type
+                                                                                </small>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getGatePassDocument() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.gatepassdocument}">
+                                                                    Gate Pass Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${inwardTruck.inwardTruck.getGatePassDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getWeighmentDocument() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.weighmentdocument}">
+                                                                    Weighment Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${inwardTruck.inwardTruck.getWeighmentDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getMandiReceiptDocument() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.mandireceiptdocument}">
+                                                                    Mandi Receipt Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${inwardTruck.inwardTruck.getMandiReceiptDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getQualityCheckDocument() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.qualitycheckdocument}">
+                                                                    Quality Check Document
+                                                                </td>
+                                                                <td>
+                                                                    <a class="tx-indigo"
+                                                                       target="_blank"
+                                                                       th:href="@{'/admin/document/download/'+${inwardTruck.inwardTruck.getQualityCheckDocument().getId()}}"
+                                                                       th:text="#{admin.grid.downloadexisting}"
+                                                                       th:title="#{admin.grid.download}">Download
+                                                                        Existing
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getWeighbridge() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.weighbridge}">
+                                                                    Weighbridge
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.weighbridge.name}">
+                                                                    Weighbridge
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getSupplier() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.supplier}">
+                                                                    Supplier
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.supplier.name}">
+                                                                    Supplier
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.getQualityLab() != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.qualitylab}">
+                                                                    Quality Lab
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.qualityLab.name}">
+                                                                    Quality Lab
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:if="${inwardTruck.inwardTruck.employee != null}">
+                                                                <td th:text="#{admin.table.inwardtruck.assayer}">
+                                                                    Assayer
+                                                                </td>
+                                                                <td th:text="${inwardTruck.inwardTruck.employee.name}">
+                                                                    Assayer
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td th:text="#{admin.table.inwardtruck.qc}">
+                                                                    QC
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item"
+                                                                            th:each="inwardQC: ${inwardTruck.getQCGrouped()}">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.qcparameter}">QC Parameter</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardQC.key}">QC Parameter</span>
+                                                                                <span class="ml-5 text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.qcvalue}">QC Value</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardQC.value}">Test Result</span>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr th:each="inwardTruckInvoice : ${inwardTruck.inwardTruckInvoiceList}">
+                                                                <td th:text="#{admin.table.inwardtruck.invoicedetails}">
+                                                                    Invoice Details
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group list-group-striped">
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicenumber}">Invoice Number</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardTruckInvoice.invoiceNumber}">Invoice Number</span>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicedate}">Invoice Date</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${#dates.format(inwardTruckInvoice.invoiceDate, 'dd-MMM-yyyy')}">Invoice Date</span>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicecommodityprice}">Commodity Price</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardTruckInvoice.commodityPrice}">Commodity Price</span>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicegst}">GST %</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardTruckInvoice.gst}">GST %</span>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicevalue}">Invoice Value</span>
+                                                                                <span class="ml-5 text-danger"
+                                                                                      th:text="${inwardTruckInvoice.invoiceValue}">Invoice Value</span>
+                                                                            </p>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <p class="mg-b-0">
+                                                                                <span class="text-muted"
+                                                                                      th:text="#{admin.table.inwardtruck.invoicedocument}">Invoice Document</span>
+                                                                                <a class="tx-indigo"
+                                                                                   target="_blank"
+                                                                                   th:href="@{'/admin/document/download/'+${inwardTruckInvoice.invoiceDocument.getId()}}"
+                                                                                   th:text="#{admin.grid.downloadexisting}"
+                                                                                   th:title="#{admin.grid.download}">Download
+                                                                                    Existing
+                                                                                </a>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- col-12 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10 hide">
+                        <div class="col-lg-12"
+                             th:each="warehouseStack, stat :${inwardRemarkForm.getWarehouseStackList()}">
+                            <div class="row mg-b-10">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label"
+                                               th:text="#{admin.form.inwardremark.stack}">Stack: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <input class="form-control" data-parsley-maxlength="255"
+                                               data-parsley-minlength="2"
+                                               data-parsley-trigger="change" readonly
+                                               required=""
+                                               th:id="${warehouseStack.friendlyName}"
+                                               th:placeholder="#{admin.form.inwardremark.stack}"
+                                               th:value="${warehouseStack.friendlyName}"
+                                               type="text">
+                                        <input class="form-control" data-parsley-maxlength="255"
+                                               data-parsley-minlength="1"
+                                               data-parsley-trigger="change"
+                                               hidden
+                                               required=""
+                                               th:field="*{warehouseStackList[__${stat.index}__]}"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label tx-success tx-bold"
+                                               th:text="#{admin.form.inwardremark.stackfull}">Stack Full: </label><span
+                                            class="tx-danger">&nbsp;*</span>
+                                        <select class="form-control select2-show-search"
+                                                th:field="*{warehouseStackList[__${stat.index}__].full}">
+                                            <option th:text="#{admin.form.option.no}" th:value="'0'"></option>
+                                            <option th:text="#{admin.form.option.yes}" th:value="'1'"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.inward.remarks}">Remarks: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <small>
+                                    <a class="tx-indigo viewremarks"
+                                       href="javascript:void(0);" th:data-inward="${model.inward.id}"
+                                       th:text="#{admin.grid.existingremarks}">View Existing Remarks
+                                    </a>
+                                </small>
+                                <textarea class="form-control" data-parsley-minlength="2"
+                                          data-parsley-trigger="change"
+                                          required="" th:field="*{remark}"
+                                          th:placeholder="#{admin.form.inward.remarks}"></textarea>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="row mg-b-10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label tx-success tx-bold"
+                                       th:text="#{admin.form.inward.status}">Status: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search"
+                                        th:field="*{status}">
+                                    <option th:each="status: ${statuses}"
+                                            th:text="${status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-12 -->
+                    </div><!-- row -->
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{inward}"
+                               th:value="*{inward}" type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}"
+                                type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}"
+                                type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        <div class="modal fade" id="remarksmodal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" th:text="#{admin.grid.remarks}">
+                            Remarks</h6>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <p class="mg-b-5" id="modalcontent"></p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- container -->
+    <script th:inline="javascript">
+        $(document).ready(
+            function () {
+                $('.viewremarks').click(function (e) {
+                    e.preventDefault();
+                    var getUrl = window.location;
+                    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var inward = $(this).data("inward");
+                    if (inward) {
+                        $.ajax({
+                            url: baseUrl + '/inward-remark/getByInward/' + inward,
+                            type: "GET",
+                            contentType: 'application/json',
+                            beforeSend: function () {
+                                $("#modalcontent").html('');
+                            },
+                            success: function (data) {
+                                var remarks = '';
+                                if (data.length > 0) {
+                                    $(data).each(function (index) {
+                                        var remarkDate = new Date(data[index].remarkDate);
+                                        remarks += '<em>' + data[index].remark + '</em><br/><small class="tx-primary tx-bold">'
+                                            + data[index].user.employee.name + '&nbsp;(<em>' + remarkDate.toISOString().split('T')[0] +
+                                            ')</em></small><br/><br/>'
+                                    });
+                                }
+                                $("#modalcontent").html(remarks);
+                                $('#remarksmodal').modal('show');
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</div><!-- slim-mainpanel -->
+</html>

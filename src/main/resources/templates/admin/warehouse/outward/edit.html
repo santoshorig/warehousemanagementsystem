@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html th:include="layouts/adminedit::adminedit"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div class="slim-mainpanel" th:fragment="content">
+    <div class="container">
+        <div th:replace="fragments/breadcrumbs::breadcrumbs"></div>
+
+        <div class="section-wrapper">
+            <div class="pd-10 mb-4 bd">
+                <ul class="nav nav-pills flex-column flex-md-row" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"
+                                            th:text="#{admin.menu.outward.basic}">
+                        Basic</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0);"
+                                            th:text="#{admin.menu.outward.trucks}">
+                        Trucks</a></li>
+                </ul>
+            </div><!-- pd-10 -->
+            <label class="section-title" th:text="${#strings.capitalizeWords(friendlyController)}">Controller</label>
+            <div class="form-layout">
+                <form data-parsley-validate="" enctype="multipart/form-data"
+                      id="modelForm" method="post" th:action="@{'/admin/'+${controller}+'/save'}" th:object="${model}">
+                    <div th:replace="fragments/alerts::alerts"></div>
+                    <div th:replace="fragments/messages::messages"></div>
+                    <div class="row mg-b-10">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.businesstype}">Business Type: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <select class="form-control select2-show-search" data-width="100%"
+                                        th:field="*{outward.businessType}">
+                                    <option th:each="businessType: ${businessTypes}"
+                                            th:text="${businessType.name}"
+                                            th:value="${businessType.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.do}">DO: </label>
+                                <select class="form-control select2-show-search"
+                                        data-width="100%" th:field="*{outward.doModel}">
+                                    <option th:each="doModel: ${dos}"
+                                            th:text="${doModel.friendlyName}"
+                                            th:value="${doModel.id}"></option>
+                                </select>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.outwarddate}">Outward Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-trigger="change"
+                                       required=""
+                                       th:field="*{outward.outwardDate}"
+                                       th:max="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                       th:placeholder="#{admin.form.outward.outwarddate}"
+                                       type="date">
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.cdfnumber}">CDF Number: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <input class="form-control" data-parsley-maxlength="255" data-parsley-minlength="2"
+                                       required=""
+                                       th:field="*{outward.cdfNumber}"
+                                       th:placeholder="#{admin.form.outward.cdfnumber}" type="text">
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label"
+                                       th:text="#{admin.form.outward.cdfdate}">CDF Date: </label><span
+                                    class="tx-danger">&nbsp;*</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                        </div>
+                                    </div>
+                                    <input class="form-control" data-parsley-trigger="change" required=""
+                                           th:field="*{outward.cdfDate}"
+                                           th:min="${#dates.format(#dates.createNow(), 'YYYY-MM-dd')}"
+                                           th:placeholder="#{admin.form.outward.cdfdate}"
+                                           type="date">
+                                </div>
+                            </div>
+                        </div><!-- col-3 -->
+                        <div class="col-lg-3 mg-t-40 mg-lg-t-0">
+                            <span th:text="#{admin.form.outward.cdfdocument}">CDF Document: </span>
+                            <span class="tx-danger"
+                                  th:if="${model.outward.getCdfDocument() == null}">&nbsp;*</span>
+                            <small th:if="${model.outward.getCdfDocument() != null}">
+                                <a class="tx-indigo"
+                                   target="_blank"
+                                   th:href="@{'/admin/document/download/'+${model.outward.getCdfDocument().getId()}}"
+                                   th:text="#{admin.grid.downloadexisting}" th:title="#{admin.grid.download}">Download
+                                    Existing
+                                </a>
+                            </small>
+                            <div class="custom-file mg-t-8">
+                                <input class="custom-file-input"
+                                       th:attrappend="required=${model.outward.getCdfDocument() == null} ? 'required'"
+                                       th:field="*{cdfDocument}" type="file">
+                                <label class="custom-file-label custom-file-label-primary"
+                                       th:text="#{admin.form.outward.cdfdocument}">CDF Document: </label>
+                            </div><!-- custom-file -->
+                        </div><!-- col-3 -->
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                    <div class="form-layout-footer">
+                        <input class="form-control" th:field="*{outward.id}" th:value="*{outward.id}" type="hidden"/>
+                        <input class="form-control" th:field="*{outward.status}" th:value="*{outward.status}"
+                               type="hidden"/>
+                        <button class="btn btn-primary bd-0" name="submit" th:text="#{admin.form.submit}" type="submit">
+                            Submit
+                        </button>
+                        <button class="btn btn-secondary bd-0" name="reset" th:text="#{admin.form.reset}" type="reset">
+                            Reset
+                        </button>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- container -->
+</div><!-- slim-mainpanel -->
+
+</html>

@@ -1,0 +1,13 @@
+.hide {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .slim-navbar .sub-item {
+        width: 100%;
+    }
+}
+
+.nav-link {
+    font-size: 0.7rem;
+}
